@@ -9,6 +9,66 @@ class DuvidaPage extends StatefulWidget {
   _DuvidaPageState createState() => _DuvidaPageState();
 }
 
+removerDuvida(context, duvida) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          contentPadding: EdgeInsets.all(40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          children: <Widget>[
+            Column(
+              children: [
+                Icon(
+                  Icons.report_gmailerrorred_outlined,
+                  color: Colors.red,
+                  size: 200,
+                ),
+                Text(
+                  'Você tem certeza que deseja remover o tópico ' +
+                      duvida.titulo +
+                      '?',
+                  style: TextStyle(
+                    fontSize: 28,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: Row(children: [
+                      MaterialButton(
+                        child: Text(
+                          'Cancelar',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        padding: EdgeInsets.all(25),
+                        color: Colors.grey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        onPressed: () => Navigator.pop,
+                      ),
+                      SizedBox(width: 10),
+                      MaterialButton(
+                        child: Text('Confirmar',
+                            style: TextStyle(color: Colors.white)),
+                        padding: EdgeInsets.all(25),
+                        color: Colors.lightGreen,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        onPressed: () => Navigator.pop,
+                      )
+                    ]))
+              ],
+            )
+          ],
+        );
+      });
+}
+
 class _DuvidaPageState extends State<DuvidaPage> {
   static String _displayStringForOption(Duvida option) => option.titulo;
   static List<Duvida> duvidas = <Duvida>[
@@ -234,7 +294,8 @@ class _DuvidaPageState extends State<DuvidaPage> {
                                       borderRadius: BorderRadius.circular(25)),
                                   child: MaterialButton(
                                       color: Colors.red,
-                                      onPressed: () => {},
+                                      onPressed: () => removerDuvida(
+                                          context, duvidas[index]),
                                       child: Row(
                                         children: [
                                           Icon(Icons.remove_circle),
