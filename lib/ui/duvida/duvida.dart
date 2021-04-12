@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:projeto_forum_proeidi/domain/resposta.dart';
+import 'package:projeto_forum_proeidi/ui/resposta/resposta.dart';
 import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
 import 'package:projeto_forum_proeidi/domain/duvida.dart';
 
@@ -12,12 +14,29 @@ class DuvidaPage extends StatefulWidget {
 class _DuvidaPageState extends State<DuvidaPage> {
   static String _displayStringForOption(Duvida option) => option.titulo;
   static List<Duvida> duvidas = <Duvida>[
-    Duvida(0, 'Whatsapp',
-        'whatsApp é um aplicativo multiplataforma de mensagens instantâneas e chamadas de voz para smartphones.'),
+    Duvida(0, 'Whatsapp', 'O que é o Whatsapp?',
+        [
+          Resposta(0, 'WhatsApp é um aplicativo multiplataforma de mensagens '
+              'instantâneas e chamadas de voz para smartphones.', true, 5, 1),
+          Resposta(1, 'WhatsApp é um aplicativo de mensageria. ', false, 1, 1)
+        ]
+    ),
     Duvida(1, 'Youtube',
-        'youTube é uma plataforma de compartilhamento de vídeos com sede em San Bruno, Califórnia.'),
+        'O que é o youtube',
+        [
+          Resposta(2, 'YouTube é uma plataforma de compartilhamento de vídeos '
+              'com sede em  San Bruno, Califórnia.', true, 3, 1),
+          Resposta(3, 'YouTube é uma plataforma para assistir vídeos.', false, 1, 1)
+        ]
+    ),
     Duvida(2, 'Gmail',
-        'O gmail (também Google Mail) é um serviço gratuito de webmail criado pela Google em 2004.'),
+        'Eu preciso pagar pelo Gmail?',
+        [
+          Resposta(4, 'O Gmail (também Google Mail) é um serviço gratuito de '
+              'webmail criado pela Google em 2004.', true, 4, 2),
+          Resposta(5, 'Sim.', false, 1, 1)
+        ]
+    ),
   ];
   static List<Duvida> _userOptions = duvidas;
 
@@ -208,7 +227,13 @@ class _DuvidaPageState extends State<DuvidaPage> {
                 child: MaterialButton(
                     color: Colors.blue,
                     onPressed: () => {
-                      Navigator.of(context).pushReplacementNamed('/resposta')
+                      // Navigator.of(context).pushReplacementNamed('/resposta'),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RespostaPage(duvida: duvida)
+                        )
+                      )
                     },
                     child: Row(
                       children: [
