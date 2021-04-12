@@ -57,38 +57,40 @@ class DuvidaFormPage extends StatelessWidget {
                   ),
                   Container(
                       margin: EdgeInsets.only(top: 20),
-                      child: Row(children: [
-                        MaterialButton(
-                          child: Text(
-                            'Cancelar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            MaterialButton(
+                              child: Text(
+                                'Cancelar',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20
+                                ),
+                              ),
+                              padding: EdgeInsets.all(15),
+                              color: Colors.grey,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              onPressed: () => Navigator.of(context).pushReplacementNamed('/duvida'),
                             ),
-                          ),
-                          padding: EdgeInsets.all(15),
-                          color: Colors.grey,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          onPressed: () => Navigator.of(context).pushReplacementNamed('/duvida'),
-                        ),
-                        SizedBox(width: 10),
-                        MaterialButton(
-                          child: Text('Salvar',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20
-                              )
-                          ),
-                          padding: EdgeInsets.all(15),
-                          color: Colors.lightGreen,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          onPressed: () => Navigator.of(context).pushReplacementNamed('/duvida'),
-                        )
-                      ])
+                            SizedBox(width: 10),
+                            MaterialButton(
+                              child: Text('Salvar',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20
+                                  )
+                              ),
+                              padding: EdgeInsets.all(15),
+                              color: Colors.lightGreen,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              onPressed: () => Navigator.of(context).pushReplacementNamed('/duvida'),
+                            )
+                          ])
                   )
                 ],
               ),

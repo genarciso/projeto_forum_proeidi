@@ -9,66 +9,6 @@ class DuvidaPage extends StatefulWidget {
   _DuvidaPageState createState() => _DuvidaPageState();
 }
 
-removerDuvida(context, duvida) {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          contentPadding: EdgeInsets.all(40),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          children: <Widget>[
-            Column(
-              children: [
-                Icon(
-                  Icons.report_gmailerrorred_outlined,
-                  color: Colors.red,
-                  size: 200,
-                ),
-                Text(
-                  'Você tem certeza que deseja remover o tópico ' +
-                      duvida.titulo +
-                      '?',
-                  style: TextStyle(
-                    fontSize: 28,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Container(
-                    margin: EdgeInsets.only(top: 20),
-                    child: Row(children: [
-                      MaterialButton(
-                        child: Text(
-                          'Cancelar',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        padding: EdgeInsets.all(25),
-                        color: Colors.grey,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      SizedBox(width: 10),
-                      MaterialButton(
-                        child: Text('Confirmar',
-                            style: TextStyle(color: Colors.white)),
-                        padding: EdgeInsets.all(25),
-                        color: Colors.lightGreen,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ]))
-              ],
-            )
-          ],
-        );
-      });
-}
-
 class _DuvidaPageState extends State<DuvidaPage> {
   static String _displayStringForOption(Duvida option) => option.titulo;
   static List<Duvida> duvidas = <Duvida>[
@@ -155,7 +95,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
                         )))
               ]),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
                     margin: EdgeInsets.only(top: 20),
@@ -200,143 +140,312 @@ class _DuvidaPageState extends State<DuvidaPage> {
                               SizedBox(width: 10),
                               Expanded(
                                   child: Container(
-                                height: 50,
-                                child: Autocomplete(
-                                  displayStringForOption:
+                                    height: 50,
+                                    child: Autocomplete(
+                                      displayStringForOption:
                                       _displayStringForOption,
-                                  optionsBuilder: _optionsBuilder,
-                                  onSelected: (Duvida selection) {
-                                    print(
-                                        'You just selected ${_displayStringForOption(selection)}');
-                                  },
-                                ),
-                              ))
+                                      optionsBuilder: _optionsBuilder,
+                                      onSelected: (Duvida selection) {
+                                        print(
+                                            'You just selected ${_displayStringForOption(selection)}');
+                                      },
+                                    ),
+                                  ))
                             ],
                           )))
                 ],
               ),
               Container(
-                margin: EdgeInsets.only(top: 20),
-                child: ListView.builder(
+                  margin: EdgeInsets.only(top: 20),
+                  child: ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: duvidas.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.only(bottom: 10),
-                        height: 140,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.lightBlue[50]),
-                        child: Row(
-                          children: [
-                            Expanded(
-                                child: Column(
-                              children: [
-                                Text(
-                                  '${duvidas[index].titulo}',
-                                  style: TextStyle(fontSize: 22),
-                                  textAlign: TextAlign.left,
-                                ),
-                                Text(
-                                  '${duvidas[index].texto}',
-                                  style: TextStyle(fontSize: 16),
-                                  textAlign: TextAlign.justify,
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 4,
-                                )
-                              ],
-                            )),
-                            Column(
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(bottom: 5),
-                                  height: 25,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25)),
-                                  child: MaterialButton(
-                                      color: Colors.blue,
-                                      onPressed: () => {
-                                        Navigator.of(context).pushReplacementNamed('/resposta')
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.remove_red_eye),
-                                          Text(
-                                            'Visualizar',
-                                            style: TextStyle(fontSize: 14),
-                                          )
-                                        ],
-                                      )),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(bottom: 5),
-                                  height: 25,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25)),
-                                  child: MaterialButton(
-                                      color: Colors.yellow,
-                                      onPressed: () => {},
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.edit),
-                                          Text(
-                                            'Editar',
-                                            style: TextStyle(fontSize: 14),
-                                          )
-                                        ],
-                                      )),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(bottom: 5),
-                                  height: 25,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25)),
-                                  child: MaterialButton(
-                                      color: Colors.red,
-                                      onPressed: () => removerDuvida(
-                                          context, duvidas[index]),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.remove_circle),
-                                          Text(
-                                            'Remover',
-                                            style: TextStyle(fontSize: 14),
-                                          )
-                                        ],
-                                      )),
-                                ),
-                                Container(
-                                  height: 25,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25)),
-                                  child: MaterialButton(
-                                      color: Colors.orange,
-                                      onPressed: () => {},
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.report),
-                                          Text(
-                                            'Denunciar',
-                                            style: TextStyle(fontSize: 14),
-                                          )
-                                        ],
-                                      )),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    }),
+                      return _itemLista(duvidas[index]);
+                    },
+                  )
               )
             ],
           ),
         ));
   }
+  Widget _itemLista(duvida) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.only(bottom: 10),
+      height: 140,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.cyan.shade50),
+      child: Row(
+        children: [
+          Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${duvida.titulo}',
+                    style: TextStyle(fontSize: 22),
+                  ),
+                  SizedBox(height: 5,),
+                  Text(
+                    '${duvida.texto}',
+                    style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.justify,
+                    overflow: TextOverflow.clip,
+                    maxLines: 4,
+                  )
+                ],
+              )),
+          SizedBox(width: 10,),
+          Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 5),
+                height: 25,
+                width: 120,
+                child: MaterialButton(
+                    color: Colors.blue,
+                    onPressed: () => {
+                      Navigator.of(context).pushReplacementNamed('/resposta')
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.remove_red_eye),
+                        SizedBox(width: 2,),
+                        Text(
+                          'Visualizar',
+                          style: TextStyle(fontSize: 14),
+                        )
+                      ],
+                    )),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 5),
+                height: 25,
+                width: 120,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25)),
+                child: MaterialButton(
+                    color: Colors.yellow,
+                    onPressed: () => {},
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit),
+                        SizedBox(width: 2,),
+                        Text(
+                          'Editar',
+                          style: TextStyle(fontSize: 14),
+                        )
+                      ],
+                    )),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 5),
+                height: 25,
+                width: 120,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25)),
+                child: MaterialButton(
+                    color: Colors.red,
+                    onPressed: () => { this._removerDuvida(context, duvida)},
+
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete_outline),
+                        SizedBox(width: 2,),
+                        Text(
+                          'Remover',
+                          style: TextStyle(fontSize: 14),
+                        )
+                      ],
+                    )),
+              ),
+              Container(
+                height: 25,
+                width: 120,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25)),
+                child: MaterialButton(
+                    color: Colors.orange,
+                    onPressed: () => {_denunciarDuvida(context, duvida)},
+                    child: Row(
+                      children: [
+                        Icon(Icons.report_gmailerrorred_outlined),
+                        Text(
+                          'Denunciar',
+                          style: TextStyle(fontSize: 14),
+                        )
+                      ],
+                    )),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  void _removerDuvida(context, duvida) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            contentPadding: EdgeInsets.all(40),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            children: <Widget>[
+              Column(
+                children: [
+                  Icon(
+                    Icons.report_gmailerrorred_outlined,
+                    color: Colors.red,
+                    size: 200,
+                  ),
+                  Text(
+                    'Você tem certeza que deseja remover o tópico ' +
+                        duvida.titulo +
+                        '?',
+                    style: TextStyle(
+                      fontSize: 25,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(top: 20),
+                      child: Row(children: [
+                        MaterialButton(
+                          child: Text(
+                            'Cancelar',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18
+                            ),
+                          ),
+                          padding: EdgeInsets.all(15),
+                          color: Colors.grey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        SizedBox(width: 10),
+                        MaterialButton(
+                          child: Text('Confirmar',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18
+                              )
+                          ),
+                          padding: EdgeInsets.all(15),
+                          color: Colors.lightGreen,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      ])
+                  )
+                ],
+              )
+            ],
+          );
+        }
+    );
+  }
+
+  void _denunciarDuvida(context, duvida) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            contentPadding: EdgeInsets.all(40),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            children: <Widget>[
+              Column(
+                children: [
+                  Icon(
+                    Icons.report_problem_outlined,
+                    color: Colors.red,
+                    size: 100,
+                  ),
+                  Text(
+                    'Denunciar dúvida',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    'Você tem certeza que deseja denunciar essa dúvida? Diga-nos o motivo da sua denúncia',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 15),
+                  Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Motivo:',
+                        style: TextStyle(
+                            fontSize: 20
+                        ),
+                      )
+                  ),
+                  TextField(
+                    maxLines: 10,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        fillColor: Colors.lightBlue[50],
+                        filled: true,
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(25)),
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(top: 20),
+                      child: Row(children: [
+                        MaterialButton(
+                          child: Text(
+                            'Cancelar',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18
+                            ),
+                          ),
+                          padding: EdgeInsets.all(15),
+                          color: Colors.grey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        SizedBox(width: 10),
+                        MaterialButton(
+                          child: Text('Confirmar',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18
+                              )
+                          ),
+                          padding: EdgeInsets.all(15),
+                          color: Colors.lightGreen,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      ])
+                  )
+                ],
+              )
+            ],
+          );
+        }
+    );
+  }
 }
+
