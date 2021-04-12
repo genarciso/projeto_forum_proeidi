@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     // TODO: Verificação do login
                     if (_usuario == 'admin' && _senha == '123') {
-                      Navigator.of(context).pushNamed('/duvida');
+                      Navigator.of(context).pushNamed('/topico');
                     }
                   },
                   style: ButtonStyle(
