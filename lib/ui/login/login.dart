@@ -8,7 +8,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   String _usuario;
   String _senha;
 
@@ -28,27 +27,24 @@ class _LoginPageState extends State<LoginPage> {
                 Container(
                   child: Image.asset('assets/images/logo.png'),
                 ),
-                SizedBox(height: 50,),
+                SizedBox(
+                  height: 50,
+                ),
                 Container(
                   decoration: BoxDecoration(
                       color: Colors.cyan.shade50,
-                      borderRadius: BorderRadius.circular(10)
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                   child: TextField(
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                            fontSize: 25
-                        ),
+                        labelStyle: TextStyle(fontSize: 25),
                         prefixIcon: Icon(
                           Icons.person_outline_outlined,
                           size: 25,
                         ),
                         labelText: 'Usuário',
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)
-                        )
-                    ),
+                            borderRadius: BorderRadius.circular(10))),
                     onChanged: (text) {
                       _usuario = text;
                     },
@@ -60,8 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                 Container(
                   decoration: BoxDecoration(
                       color: Colors.cyan.shade50,
-                      borderRadius: BorderRadius.circular(10)
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                   child: TextField(
                     obscureText: true,
                     decoration: InputDecoration(
@@ -69,14 +64,10 @@ class _LoginPageState extends State<LoginPage> {
                           Icons.lock_outlined,
                           size: 25,
                         ),
-                        labelStyle: TextStyle(
-                            fontSize: 25
-                        ),
+                        labelStyle: TextStyle(fontSize: 25),
                         labelText: 'Senha',
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)
-                        )
-                    ),
+                            borderRadius: BorderRadius.circular(10))),
                     onChanged: (text) {
                       _senha = text;
                     },
@@ -85,16 +76,16 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 20,
                 ),
-                ElevatedButton(onPressed: () {
-                  // TODO: Verificação do login
-                  if (_usuario == 'admin' && _senha == '123') {
-                    Navigator.of(context).pushNamed('/topico');
-                  }
-
-                },
+                ElevatedButton(
+                  onPressed: () {
+                    // TODO: Verificação do login
+                    if (_usuario == 'admin' && _senha == '123') {
+                      Navigator.of(context).pushNamed('/duvida');
+                    }
+                  },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
+                      (Set<MaterialState> states) {
                         if (states.contains(MaterialState.pressed))
                           return Colors.green.shade400;
                         return Colors.green.shade300;
@@ -106,37 +97,28 @@ class _LoginPageState extends State<LoginPage> {
                     height: 50,
                     alignment: Alignment.center,
                     child: Text('Entrar',
-                        style: TextStyle(
-                            fontSize: 25,
-                            color: Colors.white
-                        )
-                    ),
+                        style: TextStyle(fontSize: 25, color: Colors.white)),
                   ),
                 ),
                 Divider(color: Colors.black, height: 50),
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
+                      (Set<MaterialState> states) {
                         if (states.contains(MaterialState.pressed))
                           return Colors.amber.shade700;
-                        return Colors.amber.shade600; // Use the component's default.
+                        return Colors
+                            .amber.shade600; // Use the component's default.
                       },
                     ),
                   ),
-                  onPressed: () {
-
-                  },
+                  onPressed: () {},
                   child: Container(
                       width: double.infinity,
                       height: 50,
                       alignment: Alignment.center,
                       child: Text('Cadastrar-se',
-                          style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.white
-                      ))
-                  ),
+                          style: TextStyle(fontSize: 25, color: Colors.white))),
                 ),
               ],
             ),
