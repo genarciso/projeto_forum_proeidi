@@ -69,84 +69,6 @@ removerDuvida(context, duvida) {
       });
 }
 
-cadastrarDuvida(context) {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          title: Text('Cadastrar Dúvida'),
-          contentPadding: EdgeInsets.all(40),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          children: <Widget>[
-            Column(
-              children: [
-                Text(
-                  'Título',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Colors.lightBlue[50],
-                      filled: true,
-                      isDense: true,
-                      contentPadding: EdgeInsets.all(25)),
-                ),
-                Text(
-                  'Descrição',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                TextField(
-                  maxLines: 10,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Colors.lightBlue[50],
-                      filled: true,
-                      isDense: true,
-                      contentPadding: EdgeInsets.all(25)),
-                ),
-                Container(
-                    margin: EdgeInsets.only(top: 20),
-                    child: Row(children: [
-                      MaterialButton(
-                        child: Text(
-                          'Cancelar',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        padding: EdgeInsets.all(25),
-                        color: Colors.grey,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      SizedBox(width: 10),
-                      MaterialButton(
-                        child: Text('Salvar',
-                            style: TextStyle(color: Colors.white)),
-                        padding: EdgeInsets.all(25),
-                        color: Colors.lightGreen,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ]))
-              ],
-            )
-          ],
-        );
-      });
-}
-
 class _DuvidaPageState extends State<DuvidaPage> {
   static String _displayStringForOption(Duvida option) => option.titulo;
   static List<Duvida> duvidas = <Duvida>[
@@ -175,33 +97,34 @@ class _DuvidaPageState extends State<DuvidaPage> {
         appBar: MenuApp(),
         backgroundColor: Colors.cyan.shade100,
         body: SingleChildScrollView(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(15),
           child: Column(
             children: [
               Row(
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: new BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text('Tópicos Forum',
-                        style: TextStyle(color: Colors.white, fontSize: 16)),
+                  MaterialButton(
+                    onPressed: () { Navigator.of(context).pushReplacementNamed('/topico'); },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    color: Colors.orange.shade300,
+                    child: Text('Tópico forum', style: TextStyle(
+                        color: Colors.white
+                    ),),
                   ),
                   Text(
                     ' > ',
                     style: TextStyle(fontSize: 16),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: new BoxDecoration(
-                      color: Colors.yellow,
+                  MaterialButton(
+                    onPressed: () {},
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Text(
-                      'Dúvidas',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
+                    color: Colors.orange.shade300,
+                    child: Text('Dúvida', style: TextStyle(
+                        color: Colors.white
+                    ),),
                   ),
                 ],
               ),
@@ -257,7 +180,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
                               )),
                         ],
                       ),
-                      onPressed: () => cadastrarDuvida(context),
+                      onPressed: () => Navigator.of(context).pushNamed('/duvida/form'),
                     ),
                   ),
                 ],
@@ -335,7 +258,9 @@ class _DuvidaPageState extends State<DuvidaPage> {
                                       borderRadius: BorderRadius.circular(25)),
                                   child: MaterialButton(
                                       color: Colors.blue,
-                                      onPressed: () => {},
+                                      onPressed: () => {
+                                        Navigator.of(context).pushReplacementNamed('/resposta')
+                                      },
                                       child: Row(
                                         children: [
                                           Icon(Icons.remove_red_eye),
