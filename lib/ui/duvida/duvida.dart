@@ -48,7 +48,7 @@ removerDuvida(context, duvida) {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        onPressed: () => Navigator.pop,
+                        onPressed: () => Navigator.pop(context),
                       ),
                       SizedBox(width: 10),
                       MaterialButton(
@@ -59,7 +59,85 @@ removerDuvida(context, duvida) {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        onPressed: () => Navigator.pop,
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ]))
+              ],
+            )
+          ],
+        );
+      });
+}
+
+cadastrarDuvida(context) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text('Cadastrar Dúvida'),
+          contentPadding: EdgeInsets.all(40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          children: <Widget>[
+            Column(
+              children: [
+                Text(
+                  'Título',
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      fillColor: Colors.lightBlue[50],
+                      filled: true,
+                      isDense: true,
+                      contentPadding: EdgeInsets.all(25)),
+                ),
+                Text(
+                  'Descrição',
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                TextField(
+                  maxLines: 10,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      fillColor: Colors.lightBlue[50],
+                      filled: true,
+                      isDense: true,
+                      contentPadding: EdgeInsets.all(25)),
+                ),
+                Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: Row(children: [
+                      MaterialButton(
+                        child: Text(
+                          'Cancelar',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        padding: EdgeInsets.all(25),
+                        color: Colors.grey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      SizedBox(width: 10),
+                      MaterialButton(
+                        child: Text('Salvar',
+                            style: TextStyle(color: Colors.white)),
+                        padding: EdgeInsets.all(25),
+                        color: Colors.lightGreen,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        onPressed: () => Navigator.pop(context),
                       )
                     ]))
               ],
@@ -179,7 +257,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
                               )),
                         ],
                       ),
-                      onPressed: () => {},
+                      onPressed: () => cadastrarDuvida(context),
                     ),
                   ),
                 ],
@@ -217,6 +295,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
               Container(
                 margin: EdgeInsets.only(top: 20),
                 child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: duvidas.length,
                     itemBuilder: (BuildContext context, int index) {
