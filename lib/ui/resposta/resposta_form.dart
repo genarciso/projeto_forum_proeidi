@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_forum_proeidi/domain/duvida.dart';
+import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
 import 'package:projeto_forum_proeidi/ui/resposta/resposta.dart';
 import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
 

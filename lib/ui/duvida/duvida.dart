@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:projeto_forum_proeidi/domain/resposta.dart';
+import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
+import 'package:projeto_forum_proeidi/domain/resposta.model.dart';
 import 'package:projeto_forum_proeidi/ui/resposta/resposta.dart';
 import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
-import 'package:projeto_forum_proeidi/domain/duvida.dart';
 
 class DuvidaPage extends StatefulWidget {
   @override
@@ -12,9 +12,9 @@ class DuvidaPage extends StatefulWidget {
 }
 
 class _DuvidaPageState extends State<DuvidaPage> {
-  static String _displayStringForOption(Duvida option) => option.titulo;
-  static List<Duvida> duvidas = <Duvida>[
-    Duvida(0, 'Whatsapp', 'O que é o Whatsapp?',
+  static String _displayStringForOption(DuvidaModel option) => option.titulo;
+  static List<DuvidaModel> duvidas = <DuvidaModel>[
+    DuvidaModel(id: 0, titulo: 'Whatsapp', 'O que é o Whatsapp?',
         [
           Resposta(0, 'WhatsApp é um aplicativo multiplataforma de mensagens '
               'instantâneas e chamadas de voz para smartphones.', true, 5, 1),

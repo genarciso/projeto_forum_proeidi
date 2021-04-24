@@ -36,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(10)),
                   child: TextField(
                     keyboardType: TextInputType.emailAddress,
+
                     decoration: InputDecoration(
                         labelStyle: TextStyle(fontSize: 25),
                         prefixIcon: Icon(
@@ -79,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: () {
                     // TODO: Verificação do login
+                    if
                     if (_usuario == 'admin' && _senha == '123') {
                       Navigator.of(context).pushNamed('/topico');
                     }

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_forum_proeidi/domain/duvida.dart';
+import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
 import 'package:projeto_forum_proeidi/ui/resposta/resposta_form.dart';
 import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
 
@@ -409,7 +409,7 @@ class RespostaPage extends StatelessWidget {
                     size: 100,
                   ),
                   Text(
-                    'Denunciar dúvida',
+                    'Denunciar resposta',
                     style: TextStyle(
                       fontSize: 20,
                     ),

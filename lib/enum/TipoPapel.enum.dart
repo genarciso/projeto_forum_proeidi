@@ -1,0 +1,3 @@
+enum TipoPapel {
+  ADMINISTRADOR, COMUM
+}
