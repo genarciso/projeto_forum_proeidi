@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:projeto_forum_proeidi/domain/topico_forum.model.dart';
+import 'package:projeto_forum_proeidi/repository/topico.repository.dart';
 import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
 
 class TopicoPage extends StatefulWidget {
@@ -9,6 +11,15 @@ class TopicoPage extends StatefulWidget {
 }
 
 class _TopicoPageState extends State<TopicoPage> {
+  TopicoForumRepository _topicoForumRepository;
+
+  @override
+  void initState() {
+    _topicoForumRepository = TopicoForumRepository();
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,14 +107,35 @@ class _TopicoPageState extends State<TopicoPage> {
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 20),
-                  child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (BuildContext context, int index) {
-                        return _itemLista();
-                      }),
+                  child: FutureBuilder(
+                    future: _topicoForumRepository.buscarTodos(),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                        case ConnectionState.none:
+                          return Container(
+                            alignment: Alignment.center,
+                            child: CircularProgressIndicator(
+                              valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                              strokeWidth: 5.0,
+                            ),
+                          );
+                        default:
+                          if (snapshot.hasError)
+                            return Container();
+                          else
+                            return ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: snapshot.data.length,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return _itemLista(snapshot.data[index]);
+                                });
+                      }
+                    },
+                  ),
                 )
               ],
             )
@@ -112,7 +144,7 @@ class _TopicoPageState extends State<TopicoPage> {
     );
   }
 
-  Widget _itemLista() {
+  Widget _itemLista(TopicoForumModel item) {
     return Container(
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.only(bottom: 10),
@@ -127,12 +159,12 @@ class _TopicoPageState extends State<TopicoPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Text',
+                    item.nome,
                     style: TextStyle(fontSize: 22),
                   ),
                   SizedBox(height: 5,),
                   Text(
-                    'Tasdasdasd ad a adsadas dasdaav vsdv fsdfasd fdsfsafas da dad ada dadada fsdfdsfsd sdfsdfsdf sdf s',
+                    item.descricao,
                     style: TextStyle(fontSize: 16),
                     textAlign: TextAlign.justify,
                     overflow: TextOverflow.clip,
@@ -150,7 +182,7 @@ class _TopicoPageState extends State<TopicoPage> {
                 child: MaterialButton(
                     color: Colors.blue,
                     onPressed: () => {
-                      Navigator.of(context).pushNamed('/duvida')
+                      Navigator.of(context).pushNamed('/duvida', arguments: item)
                     },
                     child: Row(
                       children: [
@@ -191,7 +223,7 @@ class _TopicoPageState extends State<TopicoPage> {
                     borderRadius: BorderRadius.circular(25)),
                 child: MaterialButton(
                     color: Colors.red,
-                    onPressed: () => { this._removerTopico(context, {})},
+                    onPressed: () => { this._removerTopico(context, item)},
 
                     child: Row(
                       children: [
@@ -211,7 +243,7 @@ class _TopicoPageState extends State<TopicoPage> {
                     borderRadius: BorderRadius.circular(25)),
                 child: MaterialButton(
                     color: Colors.orange,
-                    onPressed: () => {_denunciarTopico(context, {})},
+                    onPressed: () => {_denunciarTopico(context, item)},
                     child: Row(
                       children: [
                         Icon(Icons.report_gmailerrorred_outlined),
@@ -229,7 +261,7 @@ class _TopicoPageState extends State<TopicoPage> {
     );
   }
 
-  void _removerTopico(context, topico) {
+  void _removerTopico(context, TopicoForumModel topico) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -248,7 +280,7 @@ class _TopicoPageState extends State<TopicoPage> {
                   ),
                   Text(
                     'Você tem certeza que deseja remover o tópico ' +
-                        'Teste' +
+                        topico.nome +
                         '?',
                     style: TextStyle(
                       fontSize: 25,
@@ -298,7 +330,7 @@ class _TopicoPageState extends State<TopicoPage> {
     );
   }
 
-  void _denunciarTopico(context, topico) {
+  void _denunciarTopico(context, TopicoForumModel topico) {
     showDialog(
         context: context,
         builder: (BuildContext context) {

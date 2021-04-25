@@ -10,6 +10,7 @@ class RespostaModel {
   final TipoDTO<num> duvida;
   int likes;
   int dislikes;
+  bool melhorResposta;
 
   RespostaModel({
     this.id,
@@ -20,14 +21,15 @@ class RespostaModel {
     this.pessoaUltimaEdicao,
     this.duvida,
     this.likes,
-    this.dislikes
+    this.dislikes,
+    this.melhorResposta
   });
 
   factory RespostaModel.fromJson(Map<String, dynamic> json) => RespostaModel(
     id: json["id"],
     resposta: json["resposta"],
-    dataCriado: json["dataCriado"],
-    dataUltimaEdicao: json["dataUltimaEdicao"],
+    dataCriado: DateTime.parse(json["dataCriado"]),
+    dataUltimaEdicao: DateTime.parse(json["dataUltimaEdicao"]),
     pessoaCadastro: TipoDTO.fromJson(json["pessoaCadastro"]),
     pessoaUltimaEdicao: TipoDTO.fromJson(json["pessoaUltimaEdicao"]),
     duvida: TipoDTO.fromJson(json["duvida"]),
@@ -38,8 +40,8 @@ class RespostaModel {
   Map<String, dynamic> toJson() => {
     "id": id,
     "resposta": resposta,
-    "dataCriado": dataCriado,
-    "dataUltimaEdicao": dataUltimaEdicao,
+    "dataCriado": dataCriado.toString(),
+    "dataUltimaEdicao": dataUltimaEdicao.toString(),
     "pessoaCadastro": pessoaCadastro.toJson(),
     "pessoaUltimaEdicao": pessoaUltimaEdicao.toJson(),
     "duvida": duvida.toJson(),

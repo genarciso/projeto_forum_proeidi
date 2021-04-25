@@ -4,7 +4,7 @@ class TopicoForumModel extends TipoDTO<num>{
   final String descricao;
   final DateTime dataCriado;
   final TipoDTO<num> pessoaCadastro;
-  List<TipoDTO<num>> tags;
+  List<TipoDTO<dynamic>> tags;
 
   TopicoForumModel({
     id,
@@ -19,16 +19,16 @@ class TopicoForumModel extends TipoDTO<num>{
       id: json["id"],
       nome: json["nome"],
       descricao: json["descricao"],
-      dataCriado: json["dataCriado"],
+      dataCriado: DateTime.parse(json["dataCriado"]),
       pessoaCadastro: TipoDTO.fromJson(json["pessoaCadastro"]),
-      tags: (json["tags"] as List).map((item) => TipoDTO.fromJson(item)).toList()
+      tags: json["tags"] != null ? (json["tags"] as List).map((item) => TipoDTO.fromJson(item)).toList() : []
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "nome": nome,
     "descricao": descricao,
-    "dataCriado": dataCriado,
+    "dataCriado": dataCriado.toString(),
     "pessoaCadastro": pessoaCadastro.toJson(),
     "tags": tags.map((item) => item.toJson()).toList()
   };

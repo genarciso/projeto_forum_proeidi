@@ -26,7 +26,6 @@ class AutenticacaoModel {
 
   @override
   String toString() {
-    // TODO: implement toString
     return "${usuarioModel.nome}: $token";
   }
 }

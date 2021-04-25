@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto_forum_proeidi/domain/topico_forum.model.dart';
 import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
 
 class DuvidaFormPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    TopicoForumModel topico = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         appBar: MenuApp(),
         backgroundColor: Colors.cyan.shade100,
@@ -73,7 +75,7 @@ class DuvidaFormPage extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              onPressed: () => Navigator.of(context).pushReplacementNamed('/duvida'),
+                              onPressed: () => Navigator.of(context).pushReplacementNamed('/duvida', arguments: topico),
                             ),
                             SizedBox(width: 10),
                             MaterialButton(
@@ -88,7 +90,7 @@ class DuvidaFormPage extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              onPressed: () => Navigator.of(context).pushReplacementNamed('/duvida'),
+                              onPressed: () => Navigator.of(context).pushReplacementNamed('/duvida', arguments: topico),
                             )
                           ])
                   )

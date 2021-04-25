@@ -11,7 +11,7 @@ class DuvidaModel extends TipoDTO<num> {
   final TipoDTO<num> pessoaUltimaEdicao;
   final TipoDTO<num> topicoForum;
   TipoDTO<num> respostaCorreta;
-  List<TipoDTO<num>> tags;
+  List<TipoDTO<dynamic>> tags;
 
   DuvidaModel({
     id,
@@ -23,6 +23,7 @@ class DuvidaModel extends TipoDTO<num> {
     this.pessoaCadastro,
     this.pessoaUltimaEdicao,
     this.topicoForum,
+    this.respostaCorreta,
     this.tags
   }) : super(id: id, nome: nome);
 
@@ -31,12 +32,13 @@ class DuvidaModel extends TipoDTO<num> {
     nome: json["nome"],
     titulo: json["titulo"],
     descricao: json["descricao"],
-    dataCriado: json["dataCriado"],
-    dataUltimaEdicao: json["dataUltimaEdicao"],
+    dataCriado: DateTime.parse(json["dataCriado"]),
+    dataUltimaEdicao: DateTime.parse(json["dataUltimaEdicao"]),
     pessoaCadastro: TipoDTO.fromJson(json["pessoaCadastro"]),
     pessoaUltimaEdicao: TipoDTO.fromJson(json["pessoaUltimaEdicao"]),
     topicoForum: TipoDTO.fromJson(json["topicoForum"]),
-    tags: (json["tags"] as List).map((item) => TipoDTO.fromJson(item)).toList()
+    respostaCorreta: json["respostaCorreta"] != null ? TipoDTO.fromJson(json["respostaCorreta"]) : null,
+    tags: json["tags"] != null ? (json["tags"] as List).map((item) => TipoDTO.fromJson(item)).toList() : []
   );
 
   Map<String, dynamic> toJson() => {
@@ -44,11 +46,12 @@ class DuvidaModel extends TipoDTO<num> {
     "nome": nome,
     "titulo": titulo,
     "descricao": descricao,
-    "dataCriado": dataCriado,
-    "dataUltimaEdicao": dataUltimaEdicao,
+    "dataCriado": dataCriado.toString(),
+    "dataUltimaEdicao": dataUltimaEdicao.toString(),
     "pessoaCadastro": pessoaCadastro.toJson(),
     "pessoaUltimaEdicao": pessoaUltimaEdicao.toJson(),
     "topicoForum": topicoForum.toJson(),
+    "respostaCorreta": respostaCorreta.toJson(),
     "tags": tags.map((item) => item.toJson()).toList()
   };
 

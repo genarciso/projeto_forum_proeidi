@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
+import 'package:projeto_forum_proeidi/repository/abstract.repository.dart';
 
-class DuvidaRepository {
-  static String urlbase = "http://localhost:8080/api/v1/duvida";
-  Response response;
-  Dio dio = Dio();
-
-
-  DuvidaRepository({this.dio});
+class DuvidaRepository extends AbstractRepository {
+  static String urlbase = AbstractRepository.urlbase + "/duvida";
 
   Future<List<DuvidaModel>> buscarTodos(num idTopico) async {
-    response = await dio.get(urlbase + "?id_related=$idTopico");
-    return (response.data as List).map((item) => DuvidaModel.fromJson(item)).toList();
+    try {
+      response = await dio.get(urlbase + "?id_related=$idTopico");
+    } on DioError catch (err) {
+      print("Erro ao pesquisar as duvidas: ${err.response.statusCode} | ${err.response.data} ");
+    }
+    return (response.data["conteudo"] as List).map((item) => DuvidaModel.fromJson(item)).toList();
   }
 
   void salvar(DuvidaModel duvidaModel) async {

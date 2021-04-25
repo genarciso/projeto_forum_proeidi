@@ -1,18 +1,16 @@
 import 'package:dio/dio.dart';
-import 'package:projeto_forum_proeidi/domain/autenticao.model.dart';
+import 'package:projeto_forum_proeidi/repository/abstract.repository.dart';
 
-class LoginRepository {
-  static String urlbase = "http://localhost:8080/api/v1/auth";
-  Response response;
-  Dio dio = Dio();
+class LoginRepository extends AbstractRepository {
+  static String urlbase = AbstractRepository.urlbase + "/auth";
 
-  LoginRepository({this.dio});
-
-  Future<AutenticacaoModel> autenticar(String login, String senha) async {
+  Future<Response> autenticar(String login, String senha) async {
     try {
-      await dio.post(urlbase + "?login=$login&password=$senha");
+      response = await dio.post(urlbase + "/login?login=$login&password=$senha");
+      return response;
     } on DioError catch(err) {
-      print("Erro ao realizar o cadastro: ${err.response.statusCode} | ${err.response.data} ");
+      return Response(requestOptions: null, statusCode: err.response.statusCode);
     }
+
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
-import 'package:projeto_forum_proeidi/domain/resposta.model.dart';
-import 'package:projeto_forum_proeidi/ui/resposta/resposta.dart';
+import 'package:projeto_forum_proeidi/domain/topico_forum.model.dart';
+import 'package:projeto_forum_proeidi/repository/duvida.repository.dart';
 import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
 
 class DuvidaPage extends StatefulWidget {
@@ -12,45 +12,36 @@ class DuvidaPage extends StatefulWidget {
 }
 
 class _DuvidaPageState extends State<DuvidaPage> {
+
+  DuvidaRepository _duvidaRepository;
+
   static String _displayStringForOption(DuvidaModel option) => option.titulo;
   static List<DuvidaModel> duvidas = <DuvidaModel>[
-    DuvidaModel(id: 0, titulo: 'Whatsapp', 'O que é o Whatsapp?',
-        [
-          Resposta(0, 'WhatsApp é um aplicativo multiplataforma de mensagens '
-              'instantâneas e chamadas de voz para smartphones.', true, 5, 1),
-          Resposta(1, 'WhatsApp é um aplicativo de mensageria. ', false, 1, 1)
-        ]
-    ),
-    Duvida(1, 'Youtube',
-        'O que é o youtube',
-        [
-          Resposta(2, 'YouTube é uma plataforma de compartilhamento de vídeos '
-              'com sede em  San Bruno, Califórnia.', true, 3, 1),
-          Resposta(3, 'YouTube é uma plataforma para assistir vídeos.', false, 1, 1)
-        ]
-    ),
-    Duvida(2, 'Gmail',
-        'Eu preciso pagar pelo Gmail?',
-        [
-          Resposta(4, 'O Gmail (também Google Mail) é um serviço gratuito de '
-              'webmail criado pela Google em 2004.', true, 4, 2),
-          Resposta(5, 'Sim.', false, 1, 1)
-        ]
-    ),
+    DuvidaModel(id: 0, titulo: 'Whatsapp', descricao: 'O que é o Whatsapp?'),
+    DuvidaModel(id: 1, titulo: 'Youtube', descricao: 'O que é o youtube'),
+    DuvidaModel(id: 2, titulo: 'Gmail', descricao: 'Eu preciso pagar pelo Gmail?'),
   ];
-  static List<Duvida> _userOptions = duvidas;
+  static List<DuvidaModel> _userOptions = duvidas;
 
+  // ignore: top_level_function_literal_block
   var _optionsBuilder = (TextEditingValue textEditingValue) {
     if (textEditingValue.text == '') {
-      return const Iterable<Duvida>.empty();
+      return const Iterable<DuvidaModel>.empty();
     }
-    return _userOptions.where((Duvida option) {
+    return _userOptions.where((DuvidaModel option) {
       return option.toString().contains(textEditingValue.text.toLowerCase());
     });
   };
 
   @override
+  void initState() {
+    _duvidaRepository = DuvidaRepository();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    TopicoForumModel topico = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         drawer: MenuLateral(),
         appBar: MenuApp(),
@@ -98,13 +89,13 @@ class _DuvidaPageState extends State<DuvidaPage> {
                         child: Column(
                           children: [
                             Text(
-                              'Titulo Tópico',
+                              topico.nome,
                               style: TextStyle(fontSize: 36),
                               textAlign: TextAlign.left,
                             ),
                             SizedBox(height: 10),
                             Text(
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                              topico.descricao,
                               overflow: TextOverflow.clip,
                               maxLines: 4,
                               style: TextStyle(fontSize: 16),
@@ -139,7 +130,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
                               )),
                         ],
                       ),
-                      onPressed: () => Navigator.of(context).pushNamed('/duvida/form'),
+                      onPressed: () => Navigator.of(context).pushNamed('/duvida/form', arguments: topico),
                     ),
                   ),
                 ],
@@ -164,7 +155,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
                                       displayStringForOption:
                                       _displayStringForOption,
                                       optionsBuilder: _optionsBuilder,
-                                      onSelected: (Duvida selection) {
+                                      onSelected: (DuvidaModel selection) {
                                         print(
                                             'You just selected ${_displayStringForOption(selection)}');
                                       },
@@ -175,21 +166,41 @@ class _DuvidaPageState extends State<DuvidaPage> {
                 ],
               ),
               Container(
-                  margin: EdgeInsets.only(top: 20),
-                  child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: duvidas.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _itemLista(duvidas[index]);
-                    },
-                  )
+                margin: EdgeInsets.only(top: 20),
+                child: FutureBuilder(
+                  future: _duvidaRepository.buscarTodos(topico.id),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                      case ConnectionState.none:
+                        return Container(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(
+                            valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.white),
+                            strokeWidth: 5.0,
+                          ),
+                        );
+                      default:
+                        if (snapshot.hasError)
+                          return Container();
+                        else
+                          return ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return _itemLista(snapshot.data[index], topico);
+                              });
+                    }
+                  },
+                ),
               )
             ],
           ),
         ));
   }
-  Widget _itemLista(duvida) {
+  Widget _itemLista(DuvidaModel duvida, TopicoForumModel topicoForumModel) {
     return Container(
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.only(bottom: 10),
@@ -209,7 +220,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
                   ),
                   SizedBox(height: 5,),
                   Text(
-                    '${duvida.texto}',
+                    '${duvida.descricao}',
                     style: TextStyle(fontSize: 16),
                     textAlign: TextAlign.justify,
                     overflow: TextOverflow.clip,
@@ -227,13 +238,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
                 child: MaterialButton(
                     color: Colors.blue,
                     onPressed: () => {
-                      // Navigator.of(context).pushReplacementNamed('/resposta'),
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RespostaPage(duvida: duvida)
-                        )
-                      )
+                      Navigator.of(context).pushReplacementNamed('/resposta', arguments: [duvida, topicoForumModel]),
                     },
                     child: Row(
                       children: [
