@@ -1,16 +1,34 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_forum_proeidi/domain/duvida.dart';
-import 'package:projeto_forum_proeidi/ui/resposta/resposta_form.dart';
+import 'package:flutter_session/flutter_session.dart';
+import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
+import 'package:projeto_forum_proeidi/domain/resposta.model.dart';
+import 'package:projeto_forum_proeidi/domain/topico_forum.model.dart';
+import 'package:projeto_forum_proeidi/repository/resposta.repository.dart';
 import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
 
-class RespostaPage extends StatelessWidget {
-  final Duvida duvida;
+class RespostaPage extends StatefulWidget {
+  @override
+  _RespostaPageState createState() => _RespostaPageState();
+}
 
-  RespostaPage({Key key, @required this.duvida}) : super(key: key);
+class _RespostaPageState extends State<RespostaPage> {
+  RespostaRepository _respostaRepository;
+  dynamic _usuarioSessao;
+
+  @override
+  void initState() {
+    _respostaRepository = RespostaRepository();
+    _carregarUsuarioSessao();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List itens = ModalRoute.of(context).settings.arguments;
+    DuvidaModel duvida = itens[0];
+    TopicoForumModel topico = itens[1];
+
     return Scaffold(
       drawer: MenuLateral(),
       appBar: MenuApp(),
@@ -36,7 +54,8 @@ class RespostaPage extends StatelessWidget {
                   style: TextStyle(fontSize: 16),
                 ),
                 MaterialButton(
-                  onPressed: () { Navigator.of(context).pushReplacementNamed('/duvida'); },
+                  onPressed: () { Navigator.of(context).pushReplacementNamed('/duvida',
+                      arguments: topico );},
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -78,7 +97,7 @@ class RespostaPage extends StatelessWidget {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            duvida.texto,
+                            duvida.descricao,
                             overflow: TextOverflow.clip,
                             maxLines: 4,
                             style: TextStyle(fontSize: 16),
@@ -113,11 +132,9 @@ class RespostaPage extends StatelessWidget {
                             )),
                       ],
                     ),
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RespostaFormPage(duvida: duvida)
-                        )
+                    onPressed: () => Navigator.of(context).pushReplacementNamed (
+                        "/resposta/form",
+                        arguments: [duvida, topico]
                     ),
                   ),
                 ),
@@ -125,13 +142,34 @@ class RespostaPage extends StatelessWidget {
             ),
             Container(
                 margin: EdgeInsets.only(top: 20),
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: duvida.respostas.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _itemLista(context, duvida.respostas[index]);
-                  },
+                child: FutureBuilder(
+                  future: _respostaRepository.buscarTodos(duvida.id),
+                  builder: (context, snapshot) {
+                    print(snapshot);
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                      case ConnectionState.none:
+                        return Container(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(
+                            valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.white),
+                            strokeWidth: 5.0,
+                          ),
+                        );
+                      default:
+                        if (snapshot.hasError)
+                          return Container();
+                        else
+                          return ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return _itemLista(snapshot.data[index], duvida);
+                            },
+                          );
+                  }},
                 )
             )
           ],
@@ -140,24 +178,24 @@ class RespostaPage extends StatelessWidget {
     );
   }
 
-  Widget _itemLista(context, resposta) {
+  Widget _itemLista(RespostaModel resposta, DuvidaModel duvidaModel) {
     return Container(
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.only(bottom: 10),
       height: 180,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: _color(resposta)) ,
+          color: _color(resposta, duvidaModel)) ,
       child: Row(
         children: [
           Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _titleMelhorResposta(resposta),
+                  _titleMelhorResposta(resposta, duvidaModel),
                   SizedBox(height: 4,),
                   Text(
-                    '${resposta.texto}',
+                    '${resposta.resposta}',
                     style: TextStyle(fontSize: 16),
                     textAlign: TextAlign.justify,
                     overflow: TextOverflow.clip,
@@ -169,56 +207,56 @@ class RespostaPage extends StatelessWidget {
           Column(
             children: [
               Container(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(bottom: 5),
-                          height: 25,
-                          width: 70,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25)),
-                          child: MaterialButton(
-                              color: Colors.green,
-                              onPressed: () => {},
-                              child: Row(
-                                children: [
-                                  Icon(Icons.thumb_up_alt_outlined),
-                                  SizedBox(width: 5,),
-                                  Text(
-                                    '${resposta.quantidadeGostei}',
-                                    style: TextStyle(fontSize: 10),
-                                  )
-                                ],
-                              )),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 5),
-                          height: 25,
-                          width: 70,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25)),
-                          child: MaterialButton(
-                              color: Colors.red,
-                              onPressed: () => {},
-                              child: Row(
-                                children: [
-                                  Icon(Icons.thumb_down_alt_outlined ),
-                                  SizedBox(width: 5,),
-                                  Text(
-                                    '${resposta.quantidadeNaoGostei}',
-                                    style: TextStyle(fontSize: 10),
-                                  )
-                                ],
-                              )),
-                        )
-                      ],
-                    )
-                  ],
-                )
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(bottom: 5),
+                            height: 25,
+                            width: 70,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25)),
+                            child: MaterialButton(
+                                color: Colors.green,
+                                onPressed: () => {},
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.thumb_up_alt_outlined),
+                                    SizedBox(width: 5,),
+                                    Text(
+                                      '${resposta.likes}',
+                                      style: TextStyle(fontSize: 10),
+                                    )
+                                  ],
+                                )),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 5),
+                            height: 25,
+                            width: 70,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25)),
+                            child: MaterialButton(
+                                color: Colors.red,
+                                onPressed: () => {},
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.thumb_down_alt_outlined ),
+                                    SizedBox(width: 5,),
+                                    Text(
+                                      '${resposta.dislikes}',
+                                      style: TextStyle(fontSize: 10),
+                                    )
+                                  ],
+                                )),
+                          )
+                        ],
+                      )
+                    ],
+                  )
               ),
-              _buttonMelhorResposta(resposta),
+              _buttonMelhorResposta(resposta, duvidaModel),
               Container(
                 margin: EdgeInsets.only(bottom: 5),
                 height: 25,
@@ -285,23 +323,23 @@ class RespostaPage extends StatelessWidget {
     );
   }
 
-  Color _color(resposta) {
-    if(resposta.melhorResposta){
+  Color _color(RespostaModel resposta, DuvidaModel duvida) {
+    if(duvida.respostaCorreta != null && resposta.id == duvida.respostaCorreta.id) {
       return Colors.green.shade200;
     }
 
     return Colors.cyan.shade50;
   }
 
-  Widget _titleMelhorResposta(resposta) {
-    if(resposta.melhorResposta) {
+  Widget _titleMelhorResposta(RespostaModel resposta, DuvidaModel duvida) {
+    if(duvida.respostaCorreta != null && resposta.id == duvida.respostaCorreta.id) {
       return Text('Melhor resposta',style: TextStyle(fontSize: 22),);
     }
     return SizedBox(height: 1,);
   }
 
-  Widget _buttonMelhorResposta(resposta) {
-    if(!resposta.melhorResposta) {
+  Widget _buttonMelhorResposta(RespostaModel resposta, DuvidaModel duvida) {
+    if(duvida.respostaCorreta == null || !(resposta.id == duvida.respostaCorreta.id)) {
       return Container(
         margin: EdgeInsets.only(bottom: 5),
         height: 25,
@@ -311,7 +349,7 @@ class RespostaPage extends StatelessWidget {
             onPressed: () => {},
             child: Row(
               children: [
-                Icon(Icons.arrow_circle_up),
+                Icon(Icons.check_circle_outline),
                 SizedBox(width: 2,),
                 Text(
                   'Melhor',
@@ -409,7 +447,7 @@ class RespostaPage extends StatelessWidget {
                     size: 100,
                   ),
                   Text(
-                    'Denunciar dúvida',
+                    'Denunciar resposta',
                     style: TextStyle(
                       fontSize: 20,
                     ),
@@ -481,5 +519,9 @@ class RespostaPage extends StatelessWidget {
           );
         }
     );
+  }
+
+  void _carregarUsuarioSessao () async {
+    _usuarioSessao = await FlutterSession().get("usuario");
   }
 }

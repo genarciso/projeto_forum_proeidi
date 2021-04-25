@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_session/flutter_session.dart';
 
 class MenuApp extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -23,70 +24,78 @@ class MenuApp extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class MenuLateral extends StatelessWidget {
+
+  Future<dynamic> usuarioSessao =  FlutterSession().get("usuario");
+
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: Material(
-        color: Colors.cyan,
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-                currentAccountPicture: Icon(Icons.account_circle_outlined, size: 80, color: Colors.white),
-                accountName: Text("Teste",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20
+    return FutureBuilder(
+      future: usuarioSessao,
+      builder:(index, snapshot) {
+        return Drawer(
+          child: Material(
+            color: Colors.cyan,
+            child: Column(
+              children: [
+                UserAccountsDrawerHeader(
+                    currentAccountPicture: Icon(Icons.account_circle_outlined, size: 80, color: Colors.white),
+                    accountName: Text(snapshot.data != null ? snapshot.data["nome"] : "",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20
+                        )
+                    ),
+                    accountEmail: Text(snapshot.data != null ? snapshot.data["email"] : "",
+                        style: TextStyle(
+                          color: Colors.white,
+                        )
                     )
                 ),
-                accountEmail: Text('Teste@gmail.com',
-                    style: TextStyle(
-                      color: Colors.white,
-                    )
-                )
-            ),
-            Divider(height: 15, color: Colors.black,),
-            ListTile(
-              leading: Icon(Icons.account_circle_outlined, size: 20, color: Colors.white),
-              title: Text('Meu perfil',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20
-                  )
-              ),
-              onTap: () {
+                Divider(height: 15, color: Colors.black,),
+                ListTile(
+                  leading: Icon(Icons.account_circle_outlined, size: 20, color: Colors.white),
+                  title: Text('Meu perfil',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20
+                      )
+                  ),
+                  onTap: () {
 
-              },
-            ),
-            Divider(height: 15, color: Colors.black,),
-            ListTile(
-              leading: Icon(Icons.insert_comment_outlined, size: 20, color: Colors.white),
-              title: Text('Minhas dúvidas',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20
+                  },
                 ),
-              ),
-              onTap: () {
-
-              },
+                Divider(height: 15, color: Colors.black,),
+                // ListTile(
+                //   leading: Icon(Icons.insert_comment_outlined, size: 20, color: Colors.white),
+                //   title: Text('Minhas dúvidas',
+                //     style: TextStyle(
+                //         color: Colors.white,
+                //         fontSize: 20
+                //     ),
+                //   ),
+                //   onTap: () {
+                //
+                //   },
+                // ),
+                // Divider(height: 15, color: Colors.black,),
+                // ListTile(
+                //   leading: Icon(Icons.question_answer_outlined, size: 20, color: Colors.white),
+                //   title: Text('Minhas respostas',
+                //     style: TextStyle(
+                //         color: Colors.white,
+                //         fontSize: 20
+                //     ),
+                //   ),
+                //   onTap: () {
+                //
+                //   },
+                // ),
+                // Divider(height: 15, color: Colors.black,),
+              ],
             ),
-            Divider(height: 15, color: Colors.black,),
-            ListTile(
-              leading: Icon(Icons.question_answer_outlined, size: 20, color: Colors.white),
-              title: Text('Minhas respostas',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20
-                ),
-              ),
-              onTap: () {
-
-              },
-            ),
-            Divider(height: 15, color: Colors.black,),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -96,7 +105,12 @@ class SairMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          // TODO: Fazer logout
+          // Limpar sessão
+          FlutterSession().set("token", "");
+          FlutterSession().set("papel", "");
+          FlutterSession().set("usuario", "");
+          FlutterSession().set("errorMessage", "");
+          FlutterSession().set("isOK", false);
           Navigator.of(context).pushReplacementNamed('/');
         },
         child: Icon(

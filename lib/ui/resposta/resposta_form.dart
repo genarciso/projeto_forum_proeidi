@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_forum_proeidi/domain/duvida.dart';
-import 'package:projeto_forum_proeidi/ui/resposta/resposta.dart';
+import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
+import 'package:projeto_forum_proeidi/domain/topico_forum.model.dart';
 import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
 
-class RespostaFormPage extends StatelessWidget {
-  final Duvida duvida;
 
-  RespostaFormPage({Key key, @required this.duvida}) : super(key: key);
+class RespostaFormPage extends StatelessWidget {
+  DuvidaModel duvida;
+  TopicoForumModel topico;
 
   @override
   Widget build(BuildContext context) {
+    final List itens = ModalRoute.of(context).settings.arguments;
+    duvida = itens[0];
+    topico = itens[1];
     return Scaffold(
         appBar: MenuApp(),
         backgroundColor: Colors.cyan.shade100,
@@ -37,7 +40,7 @@ class RespostaFormPage extends StatelessWidget {
                                 ),
                                 SizedBox(height: 10),
                                 Text(
-                                  duvida.texto,
+                                  duvida.descricao,
                                   overflow: TextOverflow.clip,
                                   maxLines: 4,
                                   style: TextStyle(fontSize: 16),
@@ -90,11 +93,10 @@ class RespostaFormPage extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              onPressed: () => Navigator.push(
+                              onPressed: () => Navigator.pushReplacementNamed(
                                   context,
-                                  MaterialPageRoute(
-                                      builder: (context) => RespostaPage(duvida: duvida)
-                                  )
+                                  "/resposta",
+                                  arguments: [duvida, topico]
                               ),
                             ),
                             SizedBox(width: 10),
@@ -110,11 +112,10 @@ class RespostaFormPage extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              onPressed: () => Navigator.push(
+                              onPressed: () => Navigator.pushReplacementNamed(
                                   context,
-                                  MaterialPageRoute(
-                                      builder: (context) => RespostaPage(duvida: duvida)
-                                  )
+                                  "/resposta",
+                                  arguments: [duvida, topico]
                               ),
                             )
                           ])

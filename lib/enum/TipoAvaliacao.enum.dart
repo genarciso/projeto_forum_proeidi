@@ -1,0 +1,3 @@
+enum TipoAvaliacao {
+  LIKE, DISLIKE
+}
