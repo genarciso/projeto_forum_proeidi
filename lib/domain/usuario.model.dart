@@ -1,11 +1,10 @@
 import 'package:projeto_forum_proeidi/domain/tipoDTO.dart';
-import 'package:projeto_forum_proeidi/enum/TipoPapel.enum.dart';
 
 class UsuarioModel extends TipoDTO<num> {
   final String usuario;
   final String email;
   DateTime dataNascimento;
-  final TipoPapel papel;
+  final String papel;
 
   UsuarioModel({id, nome, this.usuario, this.email, this.dataNascimento, this.papel}) : super(id: id, nome: nome);
 
@@ -14,8 +13,8 @@ class UsuarioModel extends TipoDTO<num> {
       nome: json["nome"],
       usuario: json["usuario"],
       email: json["email"],
-      dataNascimento: json["dataNascimento"],
-      papel: json["papel"]
+      dataNascimento: DateTime.parse(json["dataNascimento"]),
+      papel: json["papel"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -23,7 +22,7 @@ class UsuarioModel extends TipoDTO<num> {
     "nome": nome,
     "usuario": usuario,
     "email": email,
-    "dataNascimento": dataNascimento,
+    "dataNascimento": dataNascimento.toIso8601String(),
     "papel": papel
   };
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
 import 'package:projeto_forum_proeidi/domain/topico_forum.model.dart';
 import 'package:projeto_forum_proeidi/repository/duvida.repository.dart';
@@ -14,6 +15,7 @@ class DuvidaPage extends StatefulWidget {
 class _DuvidaPageState extends State<DuvidaPage> {
 
   DuvidaRepository _duvidaRepository;
+  dynamic _usuarioSessao;
 
   static String _displayStringForOption(DuvidaModel option) => option.titulo;
   static List<DuvidaModel> duvidas = <DuvidaModel>[
@@ -23,24 +25,24 @@ class _DuvidaPageState extends State<DuvidaPage> {
   ];
   static List<DuvidaModel> _userOptions = duvidas;
 
-  // ignore: top_level_function_literal_block
-  var _optionsBuilder = (TextEditingValue textEditingValue) {
-    if (textEditingValue.text == '') {
-      return const Iterable<DuvidaModel>.empty();
-    }
-    return _userOptions.where((DuvidaModel option) {
-      return option.toString().contains(textEditingValue.text.toLowerCase());
-    });
-  };
 
   @override
   void initState() {
     _duvidaRepository = DuvidaRepository();
+    _carregarUsuarioSessao();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var _optionsBuilder = (TextEditingValue textEditingValue) {
+      if (textEditingValue.text == '') {
+        return const Iterable<DuvidaModel>.empty();
+      }
+      return _userOptions.where((DuvidaModel option) {
+        return option.toString().contains(textEditingValue.text.toLowerCase());
+      });
+    };
     TopicoForumModel topico = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         drawer: MenuLateral(),
@@ -476,6 +478,10 @@ class _DuvidaPageState extends State<DuvidaPage> {
           );
         }
     );
+  }
+
+  void _carregarUsuarioSessao () async {
+    _usuarioSessao = await FlutterSession().get("usuario");
   }
 }
 

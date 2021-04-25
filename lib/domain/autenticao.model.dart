@@ -1,9 +1,8 @@
 import 'package:projeto_forum_proeidi/domain/usuario.model.dart';
-import 'package:projeto_forum_proeidi/enum/TipoPapel.enum.dart';
 
 class AutenticacaoModel {
   final UsuarioModel usuarioModel;
-  final TipoPapel papel;
+  final String papel;
 
   String errorMessage;
   String token;

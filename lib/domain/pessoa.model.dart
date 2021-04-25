@@ -12,7 +12,7 @@ class PessoaModel extends TipoDTO<num> {
     nome: json["nome"],
     usuario: json["usuario"],
     email: json["email"],
-    dataNascimento: json["dataNascimento"]
+    dataNascimento: DateTime.parse(json["dataNascimento"])
   );
 
   Map<String, dynamic> toJson() => {
@@ -20,7 +20,7 @@ class PessoaModel extends TipoDTO<num> {
     "nome": nome,
     "usuario": usuario,
     "email": email,
-    "dataNascimento": dataNascimento
+    "dataNascimento": dataNascimento.toIso8601String()
   };
 
   @override

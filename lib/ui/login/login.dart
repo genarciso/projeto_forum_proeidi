@@ -165,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
           await session.set("token", response.data["token"]);
           await session.set("papel", response.data["papel"]);
           await session.set("usuario", UsuarioModel.fromJson(response.data["usuario"]));
-          await session.set("errorMessage", response.data["errorMessage"]);
+          await session.set("errorMessage", response.data["errorMessage"] != null ? response.data["errorMessage"] : "");
           await session.set("isOK", true);
           Navigator.of(context).pushReplacementNamed('/topico');
 

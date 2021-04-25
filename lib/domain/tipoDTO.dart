@@ -1,6 +1,6 @@
 class TipoDTO<ID> {
-  final ID id;
-  final String nome;
+  ID id;
+  String nome;
 
   TipoDTO({this.id, this.nome});
 

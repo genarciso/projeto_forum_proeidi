@@ -24,10 +24,13 @@ class MenuApp extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class MenuLateral extends StatelessWidget {
+
+  Future<dynamic> usuarioSessao =  FlutterSession().get("usuario");
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: FlutterSession().get("usuario"),
+      future: usuarioSessao,
       builder:(index, snapshot) {
         return Drawer(
           child: Material(
@@ -36,13 +39,13 @@ class MenuLateral extends StatelessWidget {
               children: [
                 UserAccountsDrawerHeader(
                     currentAccountPicture: Icon(Icons.account_circle_outlined, size: 80, color: Colors.white),
-                    accountName: Text(snapshot.data["nome"],
+                    accountName: Text(snapshot.data != null ? snapshot.data["nome"] : "",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 20
                         )
                     ),
-                    accountEmail: Text(snapshot.data["email"],
+                    accountEmail: Text(snapshot.data != null ? snapshot.data["email"] : "",
                         style: TextStyle(
                           color: Colors.white,
                         )
@@ -62,32 +65,32 @@ class MenuLateral extends StatelessWidget {
                   },
                 ),
                 Divider(height: 15, color: Colors.black,),
-                ListTile(
-                  leading: Icon(Icons.insert_comment_outlined, size: 20, color: Colors.white),
-                  title: Text('Minhas dúvidas',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20
-                    ),
-                  ),
-                  onTap: () {
-
-                  },
-                ),
-                Divider(height: 15, color: Colors.black,),
-                ListTile(
-                  leading: Icon(Icons.question_answer_outlined, size: 20, color: Colors.white),
-                  title: Text('Minhas respostas',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20
-                    ),
-                  ),
-                  onTap: () {
-
-                  },
-                ),
-                Divider(height: 15, color: Colors.black,),
+                // ListTile(
+                //   leading: Icon(Icons.insert_comment_outlined, size: 20, color: Colors.white),
+                //   title: Text('Minhas dúvidas',
+                //     style: TextStyle(
+                //         color: Colors.white,
+                //         fontSize: 20
+                //     ),
+                //   ),
+                //   onTap: () {
+                //
+                //   },
+                // ),
+                // Divider(height: 15, color: Colors.black,),
+                // ListTile(
+                //   leading: Icon(Icons.question_answer_outlined, size: 20, color: Colors.white),
+                //   title: Text('Minhas respostas',
+                //     style: TextStyle(
+                //         color: Colors.white,
+                //         fontSize: 20
+                //     ),
+                //   ),
+                //   onTap: () {
+                //
+                //   },
+                // ),
+                // Divider(height: 15, color: Colors.black,),
               ],
             ),
           ),
@@ -103,10 +106,10 @@ class SairMenu extends StatelessWidget {
     return GestureDetector(
         onTap: () {
           // Limpar sessão
-          FlutterSession().set("token", null);
-          FlutterSession().set("papel", null);
-          FlutterSession().set("usuario", null);
-          FlutterSession().set("errorMessage", null);
+          FlutterSession().set("token", "");
+          FlutterSession().set("papel", "");
+          FlutterSession().set("usuario", "");
+          FlutterSession().set("errorMessage", "");
           FlutterSession().set("isOK", false);
           Navigator.of(context).pushReplacementNamed('/');
         },

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
 import 'package:projeto_forum_proeidi/domain/resposta.model.dart';
 import 'package:projeto_forum_proeidi/domain/topico_forum.model.dart';
@@ -13,10 +14,12 @@ class RespostaPage extends StatefulWidget {
 
 class _RespostaPageState extends State<RespostaPage> {
   RespostaRepository _respostaRepository;
+  dynamic _usuarioSessao;
 
   @override
   void initState() {
     _respostaRepository = RespostaRepository();
+    _carregarUsuarioSessao();
     super.initState();
   }
 
@@ -516,5 +519,9 @@ class _RespostaPageState extends State<RespostaPage> {
           );
         }
     );
+  }
+
+  void _carregarUsuarioSessao () async {
+    _usuarioSessao = await FlutterSession().get("usuario");
   }
 }

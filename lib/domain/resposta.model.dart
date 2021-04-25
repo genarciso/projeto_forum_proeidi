@@ -40,8 +40,8 @@ class RespostaModel {
   Map<String, dynamic> toJson() => {
     "id": id,
     "resposta": resposta,
-    "dataCriado": dataCriado.toString(),
-    "dataUltimaEdicao": dataUltimaEdicao.toString(),
+    "dataCriado": dataCriado.toIso8601String(),
+    "dataUltimaEdicao": dataUltimaEdicao.toIso8601String(),
     "pessoaCadastro": pessoaCadastro.toJson(),
     "pessoaUltimaEdicao": pessoaUltimaEdicao.toJson(),
     "duvida": duvida.toJson(),

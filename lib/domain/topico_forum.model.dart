@@ -1,9 +1,9 @@
 import 'package:projeto_forum_proeidi/domain/tipoDTO.dart';
 
 class TopicoForumModel extends TipoDTO<num>{
-  final String descricao;
-  final DateTime dataCriado;
-  final TipoDTO<num> pessoaCadastro;
+  String descricao;
+  DateTime dataCriado;
+  TipoDTO<num> pessoaCadastro;
   List<TipoDTO<dynamic>> tags;
 
   TopicoForumModel({
@@ -28,7 +28,7 @@ class TopicoForumModel extends TipoDTO<num>{
     "id": id,
     "nome": nome,
     "descricao": descricao,
-    "dataCriado": dataCriado.toString(),
+    "dataCriado": dataCriado != null ? dataCriado.toIso8601String() : "",
     "pessoaCadastro": pessoaCadastro.toJson(),
     "tags": tags.map((item) => item.toJson()).toList()
   };
