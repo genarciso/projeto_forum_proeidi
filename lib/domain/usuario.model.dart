@@ -22,7 +22,7 @@ class UsuarioModel extends TipoDTO<num> {
     "nome": nome,
     "usuario": usuario,
     "email": email,
-    "dataNascimento": dataNascimento.toIso8601String(),
+    "dataNascimento": dataNascimento != null ? dataNascimento.toIso8601String() : null,
     "papel": papel
   };
 
