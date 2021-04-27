@@ -20,7 +20,7 @@ class _TopicoPageState extends State<TopicoPage> {
   DenunciaRepository _denunciaRepository;
   List<TopicoForumModel> listaTopicos;
   dynamic _usuarioSessao;
-  GlobalKey<FormState> _formDenuncia  = new GlobalKey();
+  GlobalKey<FormState> _formDenuncia = new GlobalKey();
   bool _validacaoFormDenuncia = false;
   String _descricaoDenuncia = "";
 
@@ -66,9 +66,10 @@ class _TopicoPageState extends State<TopicoPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       color: Colors.orange.shade300,
-                      child: Text('Tópico forum', style: TextStyle(
-                          color: Colors.white
-                      ),),
+                      child: Text(
+                        'Tópico forum',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
@@ -83,9 +84,8 @@ class _TopicoPageState extends State<TopicoPage> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         color: Colors.green,
-                        onPressed: () => {
-                          Navigator.of(context).pushNamed('/topico/form')
-                        },
+                        onPressed: () =>
+                            {Navigator.of(context).pushNamed('/topico/form')},
                         child: Row(
                           children: [
                             Icon(
@@ -98,8 +98,7 @@ class _TopicoPageState extends State<TopicoPage> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
-                                )
-                            ),
+                                )),
                           ],
                         ),
                       ),
@@ -121,22 +120,19 @@ class _TopicoPageState extends State<TopicoPage> {
                                 SizedBox(width: 10),
                                 Expanded(
                                     child: Container(
-                                      height: 50,
-                                      child: Autocomplete(
-                                        displayStringForOption:
+                                  height: 50,
+                                  child: Autocomplete(
+                                    displayStringForOption:
                                         _displayStringForOption,
-                                        optionsBuilder: _optionsBuilder,
-                                        onSelected: (TopicoForumModel selection) {
-                                          print(
-                                              'Você selecionou ${_displayStringForOption(selection)}');
-                                        },
-                                      ),
-                                    )
-                                )
+                                    optionsBuilder: _optionsBuilder,
+                                    onSelected: (TopicoForumModel selection) {
+                                      Navigator.of(context).pushNamed('/duvida',
+                                          arguments: selection);
+                                    },
+                                  ),
+                                ))
                               ],
-                            )
-                        )
-                    )
+                            )))
                   ],
                 ),
                 Container(
@@ -151,7 +147,7 @@ class _TopicoPageState extends State<TopicoPage> {
                             alignment: Alignment.center,
                             child: CircularProgressIndicator(
                               valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                               strokeWidth: 5.0,
                             ),
                           );
@@ -172,8 +168,7 @@ class _TopicoPageState extends State<TopicoPage> {
                   ),
                 )
               ],
-            )
-        ),
+            )),
       ),
     );
   }
@@ -184,29 +179,32 @@ class _TopicoPageState extends State<TopicoPage> {
       margin: EdgeInsets.only(bottom: 10),
       height: 140,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.cyan.shade50),
+          borderRadius: BorderRadius.circular(10), color: Colors.cyan.shade50),
       child: Row(
         children: [
           Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.nome,
-                    style: TextStyle(fontSize: 22),
-                  ),
-                  SizedBox(height: 5,),
-                  Text(
-                    item.descricao,
-                    style: TextStyle(fontSize: 16),
-                    textAlign: TextAlign.justify,
-                    overflow: TextOverflow.clip,
-                    maxLines: 4,
-                  )
-                ],
-              )),
-          SizedBox(width: 10,),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.nome,
+                style: TextStyle(fontSize: 22),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                item.descricao,
+                style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.justify,
+                overflow: TextOverflow.clip,
+                maxLines: 4,
+              )
+            ],
+          )),
+          SizedBox(
+            width: 10,
+          ),
           Column(
             children: [
               Container(
@@ -216,12 +214,15 @@ class _TopicoPageState extends State<TopicoPage> {
                 child: MaterialButton(
                     color: Colors.blue,
                     onPressed: () => {
-                      Navigator.of(context).pushNamed('/duvida', arguments: item)
-                    },
+                          Navigator.of(context)
+                              .pushNamed('/duvida', arguments: item)
+                        },
                     child: Row(
                       children: [
                         Icon(Icons.remove_red_eye),
-                        SizedBox(width: 2,),
+                        SizedBox(
+                          width: 2,
+                        ),
                         Text(
                           'Visualizar',
                           style: TextStyle(fontSize: 14),
@@ -233,8 +234,8 @@ class _TopicoPageState extends State<TopicoPage> {
               Container(
                 height: 25,
                 width: 120,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25)),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(25)),
                 child: MaterialButton(
                     color: Colors.orange,
                     onPressed: () => {_denunciarTopico(context, item)},
@@ -256,22 +257,25 @@ class _TopicoPageState extends State<TopicoPage> {
   }
 
   Widget _botoesEditarRemover(TopicoForumModel topico) {
-    if (_usuarioSessao != null && _usuarioSessao["id"] == topico.pessoaCadastro.id) {
+    if (_usuarioSessao != null &&
+        _usuarioSessao["id"] == topico.pessoaCadastro.id) {
       return Column(
         children: [
           Container(
             margin: EdgeInsets.only(bottom: 5),
             height: 25,
             width: 120,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
             child: MaterialButton(
                 color: Colors.yellow,
-                onPressed: () => Navigator.of(context).pushNamed("/topico/form", arguments: topico),
+                onPressed: () => Navigator.of(context)
+                    .pushNamed("/topico/form", arguments: topico),
                 child: Row(
                   children: [
                     Icon(Icons.edit),
-                    SizedBox(width: 2,),
+                    SizedBox(
+                      width: 2,
+                    ),
                     Text(
                       'Editar',
                       style: TextStyle(fontSize: 14),
@@ -283,16 +287,16 @@ class _TopicoPageState extends State<TopicoPage> {
             margin: EdgeInsets.only(bottom: 5),
             height: 25,
             width: 120,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
             child: MaterialButton(
                 color: Colors.red,
-                onPressed: () => { this._removerTopico(context, topico)},
-
+                onPressed: () => {this._removerTopico(context, topico)},
                 child: Row(
                   children: [
                     Icon(Icons.delete_outline),
-                    SizedBox(width: 2,),
+                    SizedBox(
+                      width: 2,
+                    ),
                     Text(
                       'Remover',
                       style: TextStyle(fontSize: 14),
@@ -339,10 +343,7 @@ class _TopicoPageState extends State<TopicoPage> {
                         MaterialButton(
                           child: Text(
                             'Cancelar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                           padding: EdgeInsets.all(15),
                           color: Colors.grey,
@@ -354,11 +355,8 @@ class _TopicoPageState extends State<TopicoPage> {
                         SizedBox(width: 10),
                         MaterialButton(
                           child: Text('Confirmar',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18
-                              )
-                          ),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18)),
                           padding: EdgeInsets.all(15),
                           color: Colors.lightGreen,
                           shape: RoundedRectangleBorder(
@@ -366,33 +364,30 @@ class _TopicoPageState extends State<TopicoPage> {
                           ),
                           onPressed: () => _removerItem(topico),
                         )
-                      ])
-                  )
+                      ]))
                 ],
               )
             ],
           );
-        }
-    );
+        });
   }
 
   void _removerItem(TopicoForumModel topicoForumModel) {
     try {
       _topicoForumRepository.deletar(topicoForumModel);
       setState(() {
-        _carregarTopicos().then((value) => Navigator.of(context).pushReplacementNamed("/topico"));
+        _carregarTopicos().then(
+            (value) => Navigator.of(context).pushReplacementNamed("/topico"));
       });
     } catch (err) {
       print("Deu ruim | $err");
     }
-
   }
 
   void _denunciarTopico(context, TopicoForumModel topico) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-
           return SimpleDialog(
             contentPadding: EdgeInsets.all(40),
             shape: RoundedRectangleBorder(
@@ -401,7 +396,9 @@ class _TopicoPageState extends State<TopicoPage> {
             children: <Widget>[
               Form(
                 key: _formDenuncia,
-                autovalidateMode: _validacaoFormDenuncia ? AutovalidateMode.always : AutovalidateMode.disabled,
+                autovalidateMode: _validacaoFormDenuncia
+                    ? AutovalidateMode.always
+                    : AutovalidateMode.disabled,
                 child: Column(
                   children: [
                     Icon(
@@ -426,12 +423,10 @@ class _TopicoPageState extends State<TopicoPage> {
                     SizedBox(height: 15),
                     Container(
                         alignment: Alignment.centerLeft,
-                        child: Text('Motivo:',
-                          style: TextStyle(
-                              fontSize: 20
-                          ),
-                        )
-                    ),
+                        child: Text(
+                          'Motivo:',
+                          style: TextStyle(fontSize: 20),
+                        )),
                     TextFormField(
                       maxLines: 10,
                       validator: (value) {
@@ -457,10 +452,8 @@ class _TopicoPageState extends State<TopicoPage> {
                           MaterialButton(
                             child: Text(
                               'Cancelar',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18
-                              ),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
                             ),
                             padding: EdgeInsets.all(15),
                             color: Colors.grey,
@@ -473,10 +466,7 @@ class _TopicoPageState extends State<TopicoPage> {
                           MaterialButton(
                             child: Text('Confirmar',
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18
-                                )
-                            ),
+                                    color: Colors.white, fontSize: 18)),
                             padding: EdgeInsets.all(15),
                             color: Colors.lightGreen,
                             shape: RoundedRectangleBorder(
@@ -484,15 +474,13 @@ class _TopicoPageState extends State<TopicoPage> {
                             ),
                             onPressed: () => _enviarDenuncia(context, topico),
                           )
-                        ])
-                    )
+                        ]))
                   ],
                 ),
               )
             ],
           );
-        }
-    );
+        });
   }
 
   void _enviarDenuncia(context, TopicoForumModel topico) async {
@@ -501,53 +489,53 @@ class _TopicoPageState extends State<TopicoPage> {
 
       DenunciaModel denuncia = DenunciaModel(
           descricao: _descricaoDenuncia,
-          pessoaCadastro: TipoDTO(id: _usuarioSessao["id"], nome: _usuarioSessao["nome"]),
+          pessoaCadastro:
+              TipoDTO(id: _usuarioSessao["id"], nome: _usuarioSessao["nome"]),
           idTipo: topico.id,
-          tipoDenuncia: TipoDenuncia.TOPICO_FORUM
-      );
+          tipoDenuncia: TipoDenuncia.TOPICO_FORUM);
 
       try {
         var response = await _denunciaRepository.denunciar(denuncia);
         if (response.statusCode == 200) {
           setState(() {
             _carregarTopicos()
-                .then((value) => Navigator.of(context).pushReplacementNamed("/topico"))
+                .then((value) =>
+                    Navigator.of(context).pushReplacementNamed("/topico"))
                 .onError((error, stackTrace) => print(error));
           });
         } else if (response.statusCode == 409) {
           Navigator.of(context).pushReplacementNamed("/topico");
-          showDialog(context: context,
-            builder: (context){
+          showDialog(
+            context: context,
+            builder: (context) {
               return AlertDialog(
-                  title:Text("Erro"),
+                  title: Text("Erro"),
                   content: Text("Você ja realizou uma denuncia"),
-                  actions : <Widget>[
+                  actions: <Widget>[
                     TextButton(
                         child: Text("OK"),
                         onPressed: () {
                           Navigator.pop(context);
-                        }
-                    )
-                  ]
-              );
+                        })
+                  ]);
             },
           );
         } else {
           Navigator.of(context).pushReplacementNamed("/topico");
-          showDialog(context: context,
-            builder: (context){
+          showDialog(
+            context: context,
+            builder: (context) {
               return AlertDialog(
-                  title:Text("Erro"),
-                  content: Text("Ocorreu algum problema com o servidor. Tente novamente!"),
-                  actions : <Widget>[
+                  title: Text("Erro"),
+                  content: Text(
+                      "Ocorreu algum problema com o servidor. Tente novamente!"),
+                  actions: <Widget>[
                     TextButton(
                         child: Text("OK"),
                         onPressed: () {
                           Navigator.pop(context);
-                        }
-                    )
-                  ]
-              );
+                        })
+                  ]);
             },
           );
         }
@@ -557,7 +545,7 @@ class _TopicoPageState extends State<TopicoPage> {
     }
   }
 
-  void _carregarUsuarioSessao () async {
+  void _carregarUsuarioSessao() async {
     _usuarioSessao = await FlutterSession().get("usuario");
   }
 
@@ -566,5 +554,4 @@ class _TopicoPageState extends State<TopicoPage> {
     _userOptions = listaTopicos;
     return listaTopicos;
   }
-
 }
