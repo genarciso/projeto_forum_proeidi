@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {Navigator.of(context).pushNamed("/perfil/form");},
                     child: Container(
                         width: double.infinity,
                         height: 50,

@@ -14,7 +14,7 @@ class TopicoFormPage extends StatelessWidget {
   TopicoForumModel _topicoForumForm;
 
 
-  TopicoFormPage([TopicoForumModel topicoForumModel]) {
+  TopicoFormPage() {
     _carregarUsuarioSessao();
     _topicoForumForm = TopicoForumModel();
 

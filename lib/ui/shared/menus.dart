@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:projeto_forum_proeidi/domain/pessoa.model.dart';
+import 'package:projeto_forum_proeidi/domain/usuario.model.dart';
+import 'package:projeto_forum_proeidi/repository/pessoa.repository.dart';
 
 class MenuApp extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -26,12 +29,22 @@ class MenuApp extends StatelessWidget implements PreferredSizeWidget {
 class MenuLateral extends StatelessWidget {
 
   Future<dynamic> usuarioSessao =  FlutterSession().get("usuario");
+  PessoaRepository _pessoaRepository;
+  PessoaModel pessoa;
+
+  MenuLateral() {
+    _pessoaRepository = PessoaRepository();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: usuarioSessao,
       builder:(index, snapshot) {
+        if (snapshot.data != null && snapshot.data["id"] != null) {
+          _pessoaRepository.buscarUm( snapshot.data["id"] ).then((value) => pessoa = value);
+        }
+
         return Drawer(
           child: Material(
             color: Colors.cyan,
@@ -39,13 +52,13 @@ class MenuLateral extends StatelessWidget {
               children: [
                 UserAccountsDrawerHeader(
                     currentAccountPicture: Icon(Icons.account_circle_outlined, size: 80, color: Colors.white),
-                    accountName: Text(snapshot.data != null ? snapshot.data["nome"] : "",
+                    accountName: Text(snapshot.data != null &&  snapshot.data["id"] != null ? snapshot.data["nome"] : "",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 20
                         )
                     ),
-                    accountEmail: Text(snapshot.data != null ? snapshot.data["email"] : "",
+                    accountEmail: Text(snapshot.data != null && snapshot.data["id"] != null ? snapshot.data["email"] : "",
                         style: TextStyle(
                           color: Colors.white,
                         )
@@ -61,7 +74,7 @@ class MenuLateral extends StatelessWidget {
                       )
                   ),
                   onTap: () {
-
+                    Navigator.of(context).pushNamed("/perfil/form", arguments: snapshot.data != null && snapshot.data["id"] != null ? pessoa : null );
                   },
                 ),
                 Divider(height: 15, color: Colors.black,),
@@ -108,7 +121,7 @@ class SairMenu extends StatelessWidget {
           // Limpar sessão
           FlutterSession().set("token", "");
           FlutterSession().set("papel", "");
-          FlutterSession().set("usuario", "");
+          FlutterSession().set("usuario", UsuarioModel());
           FlutterSession().set("errorMessage", "");
           FlutterSession().set("isOK", false);
           Navigator.of(context).pushReplacementNamed('/');
@@ -118,6 +131,7 @@ class SairMenu extends StatelessWidget {
           size: 25,
         )
     );
+
   }
 }
 

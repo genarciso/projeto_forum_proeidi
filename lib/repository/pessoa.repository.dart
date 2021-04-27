@@ -1,27 +1,28 @@
 import 'package:dio/dio.dart';
 import 'package:projeto_forum_proeidi/domain/pessoa.model.dart';
+import 'package:projeto_forum_proeidi/repository/abstract.repository.dart';
 
-class PessoaRepository {
-  static String urlbase = "http://localhost:8080/api/v1/pessoa";
-  Response response;
-  Dio dio = Dio();
-
-
-  PessoaRepository({this.dio});
+class PessoaRepository extends AbstractRepository {
+  static String urlbase = AbstractRepository.urlbase + "/pessoa";
+  Dio _dio = Dio();
 
   Future<List<PessoaModel>> buscarTodos() async {
-    response = await dio.get(urlbase);
+    response = await _dio.get(urlbase);
     return (response.data as List).map((item) => PessoaModel.fromJson(item)).toList();
   }
 
-  Future<PessoaModel> buscarUm(num idPessoa) async {
-    response = await dio.get(urlbase);
-    return PessoaModel.fromJson(response.data);
+  Future<PessoaModel> buscarUm([num idPessoa]) async {
+    if (idPessoa != null) {
+      response = await _dio.get(urlbase + "/$idPessoa");
+      return PessoaModel.fromJson(response.data);
+    } else {
+      return null;
+    }
   }
 
   void salvar(PessoaModel pessoaModel) async {
     try {
-      await dio.post(urlbase, data: pessoaModel.toJson());
+      await _dio.post(urlbase, data: pessoaModel.toJson());
     } on DioError catch (err) {
       print("Erro ao realizar o cadastro: ${err.response.statusCode} | ${err.response.data} ");
     }
@@ -29,7 +30,7 @@ class PessoaRepository {
 
   void editar(PessoaModel pessoaModel) async {
     try {
-      await dio.put(urlbase , data: pessoaModel.toJson());
+      await _dio.put(urlbase , data: pessoaModel.toJson());
     } on DioError catch (err) {
       print("Erro ao realizar a edição: ${err.response.statusCode} | ${err.response.data} ");
     }
@@ -37,7 +38,7 @@ class PessoaRepository {
 
   void deletar(PessoaModel pessoaModel) async {
     try {
-      await dio.delete(urlbase + "/${pessoaModel.id}");
+      await _dio.delete(urlbase + "/${pessoaModel.id}");
     } on DioError catch (err) {
       print("Erro ao realizar a remoção: ${err.response.statusCode} | ${err.response.data} ");
     }
