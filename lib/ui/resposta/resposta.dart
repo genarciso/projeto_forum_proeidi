@@ -145,7 +145,6 @@ class _RespostaPageState extends State<RespostaPage> {
                 child: FutureBuilder(
                   future: _respostaRepository.buscarTodos(duvida.id),
                   builder: (context, snapshot) {
-                    print(snapshot);
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
                       case ConnectionState.none:
@@ -162,15 +161,15 @@ class _RespostaPageState extends State<RespostaPage> {
                           return Container();
                         else
                           return ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return _itemLista(snapshot.data[index], duvida);
-                            },
-                          );
-                  }},
-                )
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return _itemLista(snapshot.data[index], duvida);
+                              });
+                    }
+                  },
+                ),
             )
           ],
         ),
