@@ -7,10 +7,13 @@ class LoginRepository extends AbstractRepository {
 
   Future<Response> autenticar(String login, String senha) async {
     try {
-      response = await _dio.post(urlbase + "/login?login=$login&password=$senha");
+      response =
+          await _dio.post(urlbase + "/login?login=$login&password=$senha");
+      print(response);
       return response;
-    } on DioError catch(err) {
-      return Response(requestOptions: null, statusCode: err.response.statusCode);
+    } on DioError catch (err) {
+      return Response(
+          requestOptions: null, statusCode: err.response.statusCode);
     }
   }
 }

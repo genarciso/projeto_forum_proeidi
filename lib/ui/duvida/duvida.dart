@@ -13,18 +13,12 @@ class DuvidaPage extends StatefulWidget {
 }
 
 class _DuvidaPageState extends State<DuvidaPage> {
-
   DuvidaRepository _duvidaRepository;
   dynamic _usuarioSessao;
 
   static String _displayStringForOption(DuvidaModel option) => option.titulo;
-  static List<DuvidaModel> duvidas = <DuvidaModel>[
-    DuvidaModel(id: 0, titulo: 'Whatsapp', descricao: 'O que é o Whatsapp?'),
-    DuvidaModel(id: 1, titulo: 'Youtube', descricao: 'O que é o youtube'),
-    DuvidaModel(id: 2, titulo: 'Gmail', descricao: 'Eu preciso pagar pelo Gmail?'),
-  ];
+  static List<DuvidaModel> duvidas = <DuvidaModel>[];
   static List<DuvidaModel> _userOptions = duvidas;
-
 
   @override
   void initState() {
@@ -40,7 +34,9 @@ class _DuvidaPageState extends State<DuvidaPage> {
         return const Iterable<DuvidaModel>.empty();
       }
       return _userOptions.where((DuvidaModel option) {
-        return option.toString().contains(textEditingValue.text.toLowerCase());
+        return option.toString().contains(new RegExp(
+            textEditingValue.text.toLowerCase(),
+            caseSensitive: false));
       });
     };
     TopicoForumModel topico = ModalRoute.of(context).settings.arguments;
@@ -55,14 +51,17 @@ class _DuvidaPageState extends State<DuvidaPage> {
               Row(
                 children: [
                   MaterialButton(
-                    onPressed: () { Navigator.of(context).pushReplacementNamed('/topico'); },
+                    onPressed: () {
+                      Navigator.of(context).pushReplacementNamed('/topico');
+                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     color: Colors.orange.shade300,
-                    child: Text('Tópico forum', style: TextStyle(
-                        color: Colors.white
-                    ),),
+                    child: Text(
+                      'Tópico forum',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                   Text(
                     ' > ',
@@ -74,9 +73,10 @@ class _DuvidaPageState extends State<DuvidaPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     color: Colors.orange.shade300,
-                    child: Text('Dúvida', style: TextStyle(
-                        color: Colors.white
-                    ),),
+                    child: Text(
+                      'Dúvida',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -132,7 +132,8 @@ class _DuvidaPageState extends State<DuvidaPage> {
                               )),
                         ],
                       ),
-                      onPressed: () => Navigator.of(context).pushNamed('/duvida/form', arguments: topico),
+                      onPressed: () => Navigator.of(context)
+                          .pushNamed('/duvida/form', arguments: topico),
                     ),
                   ),
                 ],
@@ -152,17 +153,18 @@ class _DuvidaPageState extends State<DuvidaPage> {
                               SizedBox(width: 10),
                               Expanded(
                                   child: Container(
-                                    height: 50,
-                                    child: Autocomplete(
-                                      displayStringForOption:
+                                height: 50,
+                                child: Autocomplete(
+                                  displayStringForOption:
                                       _displayStringForOption,
-                                      optionsBuilder: _optionsBuilder,
-                                      onSelected: (DuvidaModel selection) {
-                                        print(
-                                            'You just selected ${_displayStringForOption(selection)}');
-                                      },
-                                    ),
-                                  ))
+                                  optionsBuilder: _optionsBuilder,
+                                  onSelected: (DuvidaModel selection) {
+                                    Navigator.of(context).pushReplacementNamed(
+                                        '/resposta',
+                                        arguments: [selection, topico]);
+                                  },
+                                ),
+                              ))
                             ],
                           )))
                 ],
@@ -179,7 +181,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
                           alignment: Alignment.center,
                           child: CircularProgressIndicator(
                             valueColor:
-                            AlwaysStoppedAnimation<Color>(Colors.white),
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                             strokeWidth: 5.0,
                           ),
                         );
@@ -202,35 +204,40 @@ class _DuvidaPageState extends State<DuvidaPage> {
           ),
         ));
   }
+
   Widget _itemLista(DuvidaModel duvida, TopicoForumModel topicoForumModel) {
+    duvidas.add(duvida);
     return Container(
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.only(bottom: 10),
       height: 140,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.cyan.shade50),
+          borderRadius: BorderRadius.circular(10), color: Colors.cyan.shade50),
       child: Row(
         children: [
           Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${duvida.titulo}',
-                    style: TextStyle(fontSize: 22),
-                  ),
-                  SizedBox(height: 5,),
-                  Text(
-                    '${duvida.descricao}',
-                    style: TextStyle(fontSize: 16),
-                    textAlign: TextAlign.justify,
-                    overflow: TextOverflow.clip,
-                    maxLines: 4,
-                  )
-                ],
-              )),
-          SizedBox(width: 10,),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${duvida.titulo}',
+                style: TextStyle(fontSize: 22),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                '${duvida.descricao}',
+                style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.justify,
+                overflow: TextOverflow.clip,
+                maxLines: 4,
+              )
+            ],
+          )),
+          SizedBox(
+            width: 10,
+          ),
           Column(
             children: [
               Container(
@@ -240,12 +247,16 @@ class _DuvidaPageState extends State<DuvidaPage> {
                 child: MaterialButton(
                     color: Colors.blue,
                     onPressed: () => {
-                      Navigator.of(context).pushReplacementNamed('/resposta', arguments: [duvida, topicoForumModel]),
-                    },
+                          Navigator.of(context).pushReplacementNamed(
+                              '/resposta',
+                              arguments: [duvida, topicoForumModel]),
+                        },
                     child: Row(
                       children: [
                         Icon(Icons.remove_red_eye),
-                        SizedBox(width: 2,),
+                        SizedBox(
+                          width: 2,
+                        ),
                         Text(
                           'Visualizar',
                           style: TextStyle(fontSize: 14),
@@ -257,15 +268,17 @@ class _DuvidaPageState extends State<DuvidaPage> {
                 margin: EdgeInsets.only(bottom: 5),
                 height: 25,
                 width: 120,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25)),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(25)),
                 child: MaterialButton(
                     color: Colors.yellow,
                     onPressed: () => {},
                     child: Row(
                       children: [
                         Icon(Icons.edit),
-                        SizedBox(width: 2,),
+                        SizedBox(
+                          width: 2,
+                        ),
                         Text(
                           'Editar',
                           style: TextStyle(fontSize: 14),
@@ -277,16 +290,17 @@ class _DuvidaPageState extends State<DuvidaPage> {
                 margin: EdgeInsets.only(bottom: 5),
                 height: 25,
                 width: 120,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25)),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(25)),
                 child: MaterialButton(
                     color: Colors.red,
-                    onPressed: () => { this._removerDuvida(context, duvida)},
-
+                    onPressed: () => {this._removerDuvida(context, duvida)},
                     child: Row(
                       children: [
                         Icon(Icons.delete_outline),
-                        SizedBox(width: 2,),
+                        SizedBox(
+                          width: 2,
+                        ),
                         Text(
                           'Remover',
                           style: TextStyle(fontSize: 14),
@@ -297,8 +311,8 @@ class _DuvidaPageState extends State<DuvidaPage> {
               Container(
                 height: 25,
                 width: 120,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25)),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(25)),
                 child: MaterialButton(
                     color: Colors.orange,
                     onPressed: () => {_denunciarDuvida(context, duvida)},
@@ -351,26 +365,20 @@ class _DuvidaPageState extends State<DuvidaPage> {
                         MaterialButton(
                           child: Text(
                             'Cancelar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                           padding: EdgeInsets.all(15),
                           color: Colors.grey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => _removerItem(duvida),
                         ),
                         SizedBox(width: 10),
                         MaterialButton(
                           child: Text('Confirmar',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18
-                              )
-                          ),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18)),
                           padding: EdgeInsets.all(15),
                           color: Colors.lightGreen,
                           shape: RoundedRectangleBorder(
@@ -378,14 +386,20 @@ class _DuvidaPageState extends State<DuvidaPage> {
                           ),
                           onPressed: () => Navigator.pop(context),
                         )
-                      ])
-                  )
+                      ]))
                 ],
               )
             ],
           );
-        }
-    );
+        });
+  }
+
+  void _removerItem(DuvidaModel duvidaModel) {
+    try {
+      _duvidaRepository.deletar(duvidaModel);
+    } catch (err) {
+      print("Deu ruim | $err");
+    }
   }
 
   void _denunciarDuvida(context, duvida) {
@@ -422,12 +436,10 @@ class _DuvidaPageState extends State<DuvidaPage> {
                   SizedBox(height: 15),
                   Container(
                       alignment: Alignment.centerLeft,
-                      child: Text('Motivo:',
-                        style: TextStyle(
-                            fontSize: 20
-                        ),
-                      )
-                  ),
+                      child: Text(
+                        'Motivo:',
+                        style: TextStyle(fontSize: 20),
+                      )),
                   TextField(
                     maxLines: 10,
                     decoration: InputDecoration(
@@ -443,10 +455,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
                         MaterialButton(
                           child: Text(
                             'Cancelar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                           padding: EdgeInsets.all(15),
                           color: Colors.grey,
@@ -458,11 +467,8 @@ class _DuvidaPageState extends State<DuvidaPage> {
                         SizedBox(width: 10),
                         MaterialButton(
                           child: Text('Confirmar',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18
-                              )
-                          ),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18)),
                           padding: EdgeInsets.all(15),
                           color: Colors.lightGreen,
                           shape: RoundedRectangleBorder(
@@ -470,18 +476,15 @@ class _DuvidaPageState extends State<DuvidaPage> {
                           ),
                           onPressed: () => Navigator.pop(context),
                         )
-                      ])
-                  )
+                      ]))
                 ],
               )
             ],
           );
-        }
-    );
+        });
   }
 
-  void _carregarUsuarioSessao () async {
+  void _carregarUsuarioSessao() async {
     _usuarioSessao = await FlutterSession().get("usuario");
   }
 }
-
