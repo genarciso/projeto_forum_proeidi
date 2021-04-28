@@ -1,13 +1,13 @@
 import 'package:projeto_forum_proeidi/domain/tipoDTO.dart';
 
 class RespostaModel {
-  final num id;
-  final String resposta;
-  final DateTime dataCriado;
-  final DateTime dataUltimaEdicao;
-  final TipoDTO<num> pessoaCadastro;
-  final TipoDTO<num> pessoaUltimaEdicao;
-  final TipoDTO<num> duvida;
+  num id;
+  String resposta;
+  DateTime dataCriado;
+  DateTime dataUltimaEdicao;
+  TipoDTO<num> pessoaCadastro;
+  TipoDTO<num> pessoaUltimaEdicao;
+  TipoDTO<num> duvida;
   int likes;
   int dislikes;
   bool melhorResposta;

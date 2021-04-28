@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_session/flutter_session.dart';
+import 'package:flutter_session/flutter_session.dart' show FlutterSession;
 import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
 import 'package:projeto_forum_proeidi/domain/topico_forum.model.dart';
 import 'package:projeto_forum_proeidi/repository/duvida.repository.dart';

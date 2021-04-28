@@ -1,11 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
+import 'package:projeto_forum_proeidi/domain/resposta.model.dart';
+import 'package:projeto_forum_proeidi/domain/tipoDTO.dart';
 import 'package:projeto_forum_proeidi/domain/topico_forum.model.dart';
+import 'package:projeto_forum_proeidi/repository/resposta.repository.dart';
 import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
 
 
 class RespostaFormPage extends StatelessWidget {
+  RespostaRepository _respostaRepository;
+  dynamic _usuarioSessao;
+  GlobalKey<FormState> _form = new GlobalKey();
+  bool _validacao = false;
+  RespostaModel _respostaForm;
+
+  TopicoFormPage() {
+    _carregarUsuarioSessao();
+    _respostaForm = RespostaModel();
+  }
+
   DuvidaModel duvida;
   TopicoForumModel topico;
 
@@ -66,8 +81,11 @@ class RespostaFormPage extends StatelessWidget {
                     ),
                     textAlign: TextAlign.left,
                   ),
-                  TextField(
+                  TextFormField(
                     maxLines: 10,
+                    onSaved: (text) {
+                      _respostaForm.resposta = text;
+                    },
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         fillColor: Colors.lightBlue[50],
@@ -112,11 +130,7 @@ class RespostaFormPage extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              onPressed: () => Navigator.pushReplacementNamed(
-                                  context,
-                                  "/resposta",
-                                  arguments: [duvida, topico]
-                              ),
+                              onPressed: () => _enviarForm(context),
                             )
                           ])
                   )
@@ -125,5 +139,29 @@ class RespostaFormPage extends StatelessWidget {
             )
         )
     );
+  }
+
+  void _carregarUsuarioSessao() async {
+    _usuarioSessao = await FlutterSession().get("usuario");
+  }
+
+  void _enviarForm(context) {
+    if (_form.currentState.validate()) {
+      _form.currentState.save();
+
+      _respostaForm.pessoaCadastro =
+          TipoDTO(id: _usuarioSessao["id"], nome: _usuarioSessao["nome"]);
+
+      try {
+        _respostaRepository.salvar(_respostaForm);
+        Navigator.pushReplacementNamed(
+            context,
+            "/resposta",
+            arguments: [duvida, topico]
+        );
+      } catch (err) {
+        print("Deu ruim | $err");
+      }
+    }
   }
 }
