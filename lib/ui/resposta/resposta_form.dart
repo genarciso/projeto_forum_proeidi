@@ -32,110 +32,118 @@ class RespostaFormPage extends StatelessWidget {
     return Scaffold(
         appBar: MenuApp(),
         backgroundColor: Colors.cyan.shade100,
-        body: Container(
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(children: [
-                    Expanded(
-                        child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.lightBlue[50]),
-                            margin: EdgeInsets.only(top: 30),
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              children: [
-                                Text(
-                                  duvida.titulo,
-                                  style: TextStyle(fontSize: 36),
-                                  textAlign: TextAlign.left,
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  duvida.descricao,
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 4,
-                                  style: TextStyle(fontSize: 16),
-                                  textAlign: TextAlign.justify,
-                                )
-                              ],
-                            )))
-                  ]),
-                  SizedBox(height: 20),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text('Cadastrar resposta',
-                        style: TextStyle(
-                            fontSize: 30
-                        )
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Resposta',
-                    style: TextStyle(
-                      fontSize: 25,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                  TextFormField(
-                    maxLines: 10,
-                    onSaved: (text) {
-                      _respostaForm.resposta = text;
-                    },
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        fillColor: Colors.lightBlue[50],
-                        filled: true,
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(25)),
-                  ),
-                  Container(
-                      margin: EdgeInsets.only(top: 20),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            MaterialButton(
-                              child: Text(
-                                'Cancelar',
+        body: SingleChildScrollView(
+            child: Form(
+              key: _form,
+              autovalidateMode: _validacao
+                  ? AutovalidateMode.always
+                  : AutovalidateMode.disabled,
+                child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(children: [
+                            Expanded(
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.lightBlue[50]),
+                                    margin: EdgeInsets.only(top: 30),
+                                    padding: EdgeInsets.all(20),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          duvida.titulo,
+                                          style: TextStyle(fontSize: 36),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                        SizedBox(height: 10),
+                                        Text(
+                                          duvida.descricao,
+                                          overflow: TextOverflow.clip,
+                                          maxLines: 4,
+                                          style: TextStyle(fontSize: 16),
+                                          textAlign: TextAlign.justify,
+                                        )
+                                      ],
+                                    )))
+                          ]),
+                          SizedBox(height: 20),
+                          Container(
+                            alignment: Alignment.center,
+                            child: Text('Cadastrar resposta',
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20
-                                ),
-                              ),
-                              padding: EdgeInsets.all(15),
-                              color: Colors.grey,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              onPressed: () => Navigator.pushReplacementNamed(
-                                  context,
-                                  "/resposta",
-                                  arguments: [duvida, topico]
-                              ),
+                                    fontSize: 30
+                                )
                             ),
-                            SizedBox(width: 10),
-                            MaterialButton(
-                              child: Text('Salvar',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20
-                                  )
-                              ),
-                              padding: EdgeInsets.all(15),
-                              color: Colors.lightGreen,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              onPressed: () => _enviarForm(context),
-                            )
-                          ])
-                  )
-                ],
-              ),
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Resposta',
+                            style: TextStyle(
+                              fontSize: 25,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                          TextFormField(
+                            maxLines: 10,
+                            onSaved: (text) {
+                              _respostaForm.resposta = text;
+                            },
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                fillColor: Colors.lightBlue[50],
+                                filled: true,
+                                isDense: true,
+                                contentPadding: EdgeInsets.all(25)),
+                          ),
+                          Container(
+                              margin: EdgeInsets.only(top: 20),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    MaterialButton(
+                                      child: Text(
+                                        'Cancelar',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.all(15),
+                                      color: Colors.grey,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      onPressed: () => Navigator.pushReplacementNamed(
+                                          context,
+                                          "/resposta",
+                                          arguments: [duvida, topico]
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    MaterialButton(
+                                      child: Text('Salvar',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20
+                                          )
+                                      ),
+                                      padding: EdgeInsets.all(15),
+                                      color: Colors.lightGreen,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      onPressed: () => _enviarForm(context),
+                                    )
+                                  ])
+                          )
+                        ],
+                      ),
+                    )
+                )
             )
         )
     );
