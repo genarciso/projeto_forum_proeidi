@@ -43,7 +43,9 @@ class _TopicoPageState extends State<TopicoPage> {
         return const Iterable<TopicoForumModel>.empty();
       }
       return _userOptions.where((TopicoForumModel option) {
-        return option.toString().contains(textEditingValue.text.toLowerCase());
+        return option.toString().contains(new RegExp(
+            textEditingValue.text.toLowerCase(),
+            caseSensitive: false));
       });
     };
     return Scaffold(
