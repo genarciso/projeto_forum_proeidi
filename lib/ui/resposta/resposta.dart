@@ -423,7 +423,7 @@ class _RespostaPageState extends State<RespostaPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          onPressed: () => _removerResposta(context, resposta),
+                          onPressed: () => _removerItem(resposta),
                         )
                       ])
                   )
