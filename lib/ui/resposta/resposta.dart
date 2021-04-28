@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:projeto_forum_proeidi/domain/denuncia.model.dart';
 import 'package:projeto_forum_proeidi/domain/duvida.model.dart';
 import 'package:projeto_forum_proeidi/domain/resposta.model.dart';
+import 'package:projeto_forum_proeidi/domain/tipoDTO.dart';
 import 'package:projeto_forum_proeidi/domain/topico_forum.model.dart';
+import 'package:projeto_forum_proeidi/enum/TipoDenuncia.enum.dart';
+import 'package:projeto_forum_proeidi/repository/denuncia.repository.dart';
 import 'package:projeto_forum_proeidi/repository/resposta.repository.dart';
 import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
 
@@ -14,8 +18,9 @@ class RespostaPage extends StatefulWidget {
 
 class _RespostaPageState extends State<RespostaPage> {
   RespostaRepository _respostaRepository;
-  dynamic _usuarioSessao;
+  DenunciaRepository _denunciaRepository;
   List<RespostaModel> listaResposta;
+  dynamic _usuarioSessao;
   GlobalKey<FormState> _formDenuncia = new GlobalKey();
   bool _validacaoFormDenuncia = false;
   String _descricaoDenuncia = "";
@@ -25,6 +30,7 @@ class _RespostaPageState extends State<RespostaPage> {
   @override
   void initState() {
     _respostaRepository = RespostaRepository();
+    _denunciaRepository = DenunciaRepository();
     _carregarUsuarioSessao();
     super.initState();
   }
@@ -537,6 +543,68 @@ class _RespostaPageState extends State<RespostaPage> {
           );
         }
     );
+  }
+
+  void _enviarDenuncia(context, RespostaModel respostaModel) async {
+    if (_formDenuncia.currentState.validate()) {
+      _formDenuncia.currentState.save();
+
+      DenunciaModel denuncia = DenunciaModel(
+          descricao: _descricaoDenuncia,
+          pessoaCadastro:
+          TipoDTO(id: _usuarioSessao["id"], nome: _usuarioSessao["nome"]),
+          idTipo: respostaModel.id,
+          tipoDenuncia: TipoDenuncia.RESPOSTA);
+
+      try {
+        var response = await _denunciaRepository.denunciar(denuncia);
+        if (response.statusCode == 200) {
+          setState(() {
+            _carregarRespostas(respostaModel.duvida)
+                .then((value) =>
+                Navigator.of(context).pushReplacementNamed("/resposta"))
+                .onError((error, stackTrace) => print(error));
+          });
+        } else if (response.statusCode == 409) {
+          Navigator.of(context).pushReplacementNamed("/resposta");
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  title: Text("Erro"),
+                  content: Text("Você ja realizou uma denuncia"),
+                  actions: <Widget>[
+                    TextButton(
+                        child: Text("OK"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        })
+                  ]);
+            },
+          );
+        } else {
+          Navigator.of(context).pushReplacementNamed("/resposta");
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  title: Text("Erro"),
+                  content: Text(
+                      "Ocorreu algum problema com o servidor. Tente novamente!"),
+                  actions: <Widget>[
+                    TextButton(
+                        child: Text("OK"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        })
+                  ]);
+            },
+          );
+        }
+      } catch (err) {
+        print("Deu ruim | $err");
+      }
+    }
   }
 
   void _carregarUsuarioSessao () async {
