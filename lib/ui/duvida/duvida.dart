@@ -17,12 +17,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
   dynamic _usuarioSessao;
 
   static String _displayStringForOption(DuvidaModel option) => option.titulo;
-  static List<DuvidaModel> duvidas = <DuvidaModel>[
-    DuvidaModel(id: 0, titulo: 'Whatsapp', descricao: 'O que é o Whatsapp?'),
-    DuvidaModel(id: 1, titulo: 'Youtube', descricao: 'O que é o youtube'),
-    DuvidaModel(
-        id: 2, titulo: 'Gmail', descricao: 'Eu preciso pagar pelo Gmail?'),
-  ];
+  static List<DuvidaModel> duvidas = <DuvidaModel>[];
   static List<DuvidaModel> _userOptions = duvidas;
 
   @override
@@ -164,8 +159,9 @@ class _DuvidaPageState extends State<DuvidaPage> {
                                       _displayStringForOption,
                                   optionsBuilder: _optionsBuilder,
                                   onSelected: (DuvidaModel selection) {
-                                    print(
-                                        'You just selected ${_displayStringForOption(selection)}');
+                                    Navigator.of(context).pushReplacementNamed(
+                                        '/resposta',
+                                        arguments: [selection, topico]);
                                   },
                                 ),
                               ))
@@ -210,6 +206,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
   }
 
   Widget _itemLista(DuvidaModel duvida, TopicoForumModel topicoForumModel) {
+    duvidas.add(duvida);
     return Container(
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.only(bottom: 10),

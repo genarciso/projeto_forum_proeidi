@@ -15,7 +15,8 @@ class DuvidaModel extends TipoDTO<num> {
 
   DuvidaModel(
       {id,
-      titulo,
+      nome,
+      this.titulo,
       this.descricao,
       this.dataCriado,
       this.dataUltimaEdicao,
@@ -24,7 +25,7 @@ class DuvidaModel extends TipoDTO<num> {
       this.topicoForum,
       this.respostaCorreta,
       this.tags})
-      : super(id: id, nome: titulo);
+      : super(id: id, nome: nome);
 
   factory DuvidaModel.fromJson(Map<String, dynamic> json) => DuvidaModel(
       id: json["id"],
@@ -54,9 +55,9 @@ class DuvidaModel extends TipoDTO<num> {
         "pessoaCadastro": pessoaCadastro.toJson(),
         "pessoaUltimaEdicao":
             pessoaUltimaEdicao != null ? pessoaUltimaEdicao.toJson() : {},
-        "topicoForum": topicoForum != null ? topicoForum.toJson() : {},
+        "topicoForum": topicoForum.toJson(),
         "respostaCorreta":
-            respostaCorreta != null ? respostaCorreta.toJson() : {},
+            respostaCorreta != null ? respostaCorreta.toJson() : null,
         "tags": tags.map((item) => item.toJson()).toList()
       };
 
