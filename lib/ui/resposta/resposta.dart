@@ -15,6 +15,12 @@ class RespostaPage extends StatefulWidget {
 class _RespostaPageState extends State<RespostaPage> {
   RespostaRepository _respostaRepository;
   dynamic _usuarioSessao;
+  List<RespostaModel> listaResposta;
+  GlobalKey<FormState> _formDenuncia = new GlobalKey();
+  bool _validacaoFormDenuncia = false;
+  String _descricaoDenuncia = "";
+
+  static List<RespostaModel> _userOptions;
 
   @override
   void initState() {
@@ -163,9 +169,9 @@ class _RespostaPageState extends State<RespostaPage> {
                           return ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: snapshot.data.length,
+                              itemCount: _userOptions?.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return _itemLista(snapshot.data[index], duvida);
+                                return _itemLista(_userOptions[index], _userOptions[index].duvida);
                               });
                     }
                   },
@@ -361,7 +367,7 @@ class _RespostaPageState extends State<RespostaPage> {
     return SizedBox(height: 1,);
   }
 
-  void _removerResposta(context, resposta) {
+  void _removerResposta(context, RespostaModel resposta) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -416,7 +422,7 @@ class _RespostaPageState extends State<RespostaPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => _removerResposta(context, resposta),
                         )
                       ])
                   )
@@ -426,6 +432,18 @@ class _RespostaPageState extends State<RespostaPage> {
           );
         }
     );
+  }
+
+  void _removerItem(RespostaModel respostaModel) {
+    try {
+      _respostaRepository.deletar(respostaModel);
+      setState(() {
+        _carregarRespostas().then(
+                (value) => Navigator.of(context).pushReplacementNamed("/resposta"));
+      });
+    } catch (err) {
+      print("Deu ruim | $err");
+    }
   }
 
   void _denunciarResposta(context, resposta) {
@@ -522,5 +540,11 @@ class _RespostaPageState extends State<RespostaPage> {
 
   void _carregarUsuarioSessao () async {
     _usuarioSessao = await FlutterSession().get("usuario");
+  }
+
+  Future<List<RespostaModel>> _carregarRespostas() async {
+    listaResposta = await _respostaRepository.buscarTodos();
+    _userOptions = listaResposta;
+    return listaResposta;
   }
 }
