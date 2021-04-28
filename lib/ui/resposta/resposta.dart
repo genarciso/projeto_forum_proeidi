@@ -270,7 +270,8 @@ class _RespostaPageState extends State<RespostaPage> {
                     borderRadius: BorderRadius.circular(25)),
                 child: MaterialButton(
                     color: Colors.yellow,
-                    onPressed: () => {},
+                    onPressed: () => Navigator.of(context)
+                        .pushNamed("/resposta/form", arguments: resposta),
                     child: Row(
                       children: [
                         Icon(Icons.edit),
