@@ -12,7 +12,7 @@ import 'package:projeto_forum_proeidi/ui/shared/menus.dart';
 class RespostaFormPage extends StatelessWidget {
   RespostaRepository _respostaRepository;
   dynamic _usuarioSessao;
-  GlobalKey<FormState> _form = new GlobalKey();
+  GlobalKey<FormState> _formResposta = new GlobalKey();
   bool _validacao = false;
   RespostaModel _respostaForm;
 
@@ -34,7 +34,7 @@ class RespostaFormPage extends StatelessWidget {
         backgroundColor: Colors.cyan.shade100,
         body: SingleChildScrollView(
             child: Form(
-              key: _form,
+              key: _formResposta,
               autovalidateMode: _validacao
                   ? AutovalidateMode.always
                   : AutovalidateMode.disabled,
@@ -88,9 +88,13 @@ class RespostaFormPage extends StatelessWidget {
                             textAlign: TextAlign.left,
                           ),
                           TextFormField(
-                            maxLines: 10,
-                            onSaved: (text) {
-                              _respostaForm.resposta = text;
+                            initialValue: _respostaForm.resposta,
+                            validator: (value) {
+                              if (value.length == 0) {
+                                return "Campo Obrigatório";
+                              } else {
+                                return null;
+                              }
                             },
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
@@ -98,6 +102,9 @@ class RespostaFormPage extends StatelessWidget {
                                 filled: true,
                                 isDense: true,
                                 contentPadding: EdgeInsets.all(25)),
+                            onSaved: (text) {
+                              _respostaForm.resposta = text;
+                            },
                           ),
                           Container(
                               margin: EdgeInsets.only(top: 20),
@@ -154,8 +161,8 @@ class RespostaFormPage extends StatelessWidget {
   }
 
   void _enviarForm(context) {
-    if (_form.currentState.validate()) {
-      _form.currentState.save();
+    if (_formResposta.currentState.validate()) {
+      _formResposta.currentState.save();
 
       _respostaForm.pessoaCadastro =
           TipoDTO(id: _usuarioSessao["id"], nome: _usuarioSessao["nome"]);

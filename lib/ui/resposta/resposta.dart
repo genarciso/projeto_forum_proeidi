@@ -439,7 +439,7 @@ class _RespostaPageState extends State<RespostaPage> {
     try {
       _respostaRepository.deletar(respostaModel);
       setState(() {
-        _carregarRespostas().then(
+        _carregarRespostas(respostaModel.duvida).then(
                 (value) => Navigator.of(context).pushReplacementNamed("/resposta"));
       });
     } catch (err) {
@@ -543,8 +543,8 @@ class _RespostaPageState extends State<RespostaPage> {
     _usuarioSessao = await FlutterSession().get("usuario");
   }
 
-  Future<List<RespostaModel>> _carregarRespostas() async {
-    listaResposta = await _respostaRepository.buscarTodos();
+  Future<List<RespostaModel>> _carregarRespostas(DuvidaModel duvida) async {
+    listaResposta = await _respostaRepository.buscarTodos(duvida.id);
     _userOptions = listaResposta;
     return listaResposta;
   }
