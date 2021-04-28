@@ -150,7 +150,7 @@ class DuvidaFormPage extends StatelessWidget {
           TipoDTO(id: _usuarioSessao["id"], nome: _usuarioSessao["nome"]);
       _duvidaForm.tags = [];
       _duvidaForm.topicoForum = TipoDTO(id: topico.id, nome: topico.nome);
-      //print(_duvidaForm.titulo);
+      print(_duvidaForm.toJson());
       try {
         _duvidaRepository.salvar(_duvidaForm);
         Navigator.of(context)

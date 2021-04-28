@@ -372,7 +372,7 @@ class _DuvidaPageState extends State<DuvidaPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => _removerItem(duvida),
                         ),
                         SizedBox(width: 10),
                         MaterialButton(
@@ -392,6 +392,14 @@ class _DuvidaPageState extends State<DuvidaPage> {
             ],
           );
         });
+  }
+
+  void _removerItem(DuvidaModel duvidaModel) {
+    try {
+      _duvidaRepository.deletar(duvidaModel);
+    } catch (err) {
+      print("Deu ruim | $err");
+    }
   }
 
   void _denunciarDuvida(context, duvida) {
